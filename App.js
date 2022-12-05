@@ -1,24 +1,13 @@
-import React, { useState } from "react";
-import { Text } from "react-native";
-// import {} from "react-native";
-// import { AppLoading } from "expo";
+import React from "react";
 
-// import RegisterScreen from "./screens/RegistrationScreen";
+import RegisterScreen from "./screens/RegistrationScreen";
 // import LoginScreen from "./screens/LoginScreen";
 
 export default function App() {
-  // const [isReady, setIsReady] = useState(false);
-  // if (!isReady) {
-  //   return (
-  //     <AppLoading onFinish={() => setIsReady(true)} onError={console.warn} />
-  //   );
-  // }
-
   return (
     <>
-      <Text>Test</Text>
-      {/* <RegisterScreen />
-      <LoginScreen /> */}
+      <RegisterScreen />
+      {/* <LoginScreen /> */}
     </>
   );
 }

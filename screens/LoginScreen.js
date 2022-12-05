@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -9,7 +9,7 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   TouchableWithoutFeedback,
-  Dimensions,
+  ImageBackground,
 } from "react-native";
 
 const initialState = {
@@ -18,22 +18,9 @@ const initialState = {
 };
 
 export default function LoginScreen() {
+  console.log(Platform.OS);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
-  const [dimensions, setDimensions] = useState(
-    Dimensions.get("window").width - 20 * 2
-  );
-
-  useEffect(() => {
-    const onChange = () => {
-      const width = Dimensions.get("window").width - 20 * 2;
-      setDimensions(width);
-    };
-    Dimensions.addEventListener("change", onChange);
-    return () => {
-      Dimensions.removeEventListener("change", onChange);
-    };
-  }, []);
 
   const keyboardHide = () => {
     setIsShowKeyboard(false);
@@ -45,55 +32,63 @@ export default function LoginScreen() {
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
       <View style={styles.container}>
-        <KeyboardAvoidingView
-          behavior={Platform.OS == "ios" ? "padding" : "height"}
+        <ImageBackground
+          style={styles.image}
+          source={require("../assets/31835.jpg")}
         >
-          <View
-            style={{
-              ...styles.form,
-              marginBottom: isShowKeyboard ? 20 : 150,
-              width: dimensions,
-            }}
+          <KeyboardAvoidingView
+            behavior={Platform.OS == "ios" ? "padding" : "height"}
           >
-            <View style={styles.header}>
-              <Text style={styles.headerTitle}>Welcome back!</Text>
-            </View>
-            <View>
-              <Text style={styles.inputTitle}>Email addres</Text>
-              <TextInput
-                style={styles.input}
-                name="hello"
-                textAlign={"center"}
-                onFocus={() => setIsShowKeyboard(true)}
-                value={state.email}
-                onChange={(nativeEvent) => console.log(nativeEvent)}
-                onChangeText={(value) =>
-                  setState((prevState) => ({ ...prevState, email: value }))
-                }
-              />
-            </View>
-            <View style={{ marginTop: 20 }}>
-              <Text style={styles.inputTitle}>Password</Text>
-              <TextInput
-                style={styles.input}
-                textAlign={"center"}
-                secureTextEntry={true}
-                onFocus={() => setIsShowKeyboard(true)}
-                value={state.password}
-                onChangeText={(value) =>
-                  setState((prevState) => ({ ...prevState, password: value }))
-                }
-              />
-            </View>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              style={styles.btn}
-              onPress={keyboardHide}
+            <View
+              style={{
+                paddingHorizontal: 40,
+              }}
             >
-              <Text style={styles.btnTitle}>Sign in</Text>
-            </TouchableOpacity>
-          </View>
-        </KeyboardAvoidingView>
+              <View
+                style={{
+                  marginTop: 10,
+                  marginLeft: "auto",
+                  marginRight: "auto",
+                }}
+              >
+                <Text style={styles.headerTitle}>Welcome back!</Text>
+              </View>
+              <View style={{ marginTop: 20 }}>
+                <Text style={styles.inputTitle}>Email addres</Text>
+                <TextInput
+                  style={styles.input}
+                  textAlign={"center"}
+                  onFocus={() => setIsShowKeyboard(true)}
+                  value={state.email}
+                  onChange={(nativeEvent) => console.log(nativeEvent)}
+                  onChangeText={(value) =>
+                    setState((prevState) => ({ ...prevState, email: value }))
+                  }
+                />
+              </View>
+              <View style={{ marginTop: 20 }}>
+                <Text style={styles.inputTitle}>Password</Text>
+                <TextInput
+                  style={styles.input}
+                  textAlign={"center"}
+                  secureTextEntry={true}
+                  onFocus={() => setIsShowKeyboard(true)}
+                  value={state.password}
+                  onChangeText={(value) =>
+                    setState((prevState) => ({ ...prevState, password: value }))
+                  }
+                />
+              </View>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                style={styles.btn}
+                onPress={keyboardHide}
+              >
+                <Text style={styles.btnTitle}>Sign in</Text>
+              </TouchableOpacity>
+            </View>
+          </KeyboardAvoidingView>
+        </ImageBackground>
       </View>
     </TouchableWithoutFeedback>
   );
@@ -102,18 +97,23 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+  },
+  image: {
+    flex: 1,
+    resizeMode: "cover",
+    justifyContent: "center",
   },
   input: {
     borderWidth: 1,
-    borderColor: "f0f8ff",
+    borderColor: "#ccc",
     height: 40,
     borderRadius: 8,
-    color: "#f0f8ff",
+    color: "#ccc",
   },
   inputTitle: {
-    color: "#f0f8ff",
-    marginBottom: 10,
+    color: "#ccc",
+    fontSize: 12,
+    marginBottom: 8,
   },
   btn: {
     borderRadius: 6,
@@ -122,7 +122,6 @@ const styles = StyleSheet.create({
     marginTop: 40,
     justifyContent: "center",
     alignItems: "center",
-    marginHorizontal: 20,
     ...Platform.select({
       ios: {
         backgroundColor: "transparent",
@@ -136,12 +135,10 @@ const styles = StyleSheet.create({
   },
   btnTitle: {
     color: Platform.OS === "ios" ? "#4169e1" : "#f0f8ff",
-  },
-  header: {
-    alignItems: "center",
-    marginBottom: 120,
+    fontSize: 16,
   },
   headerTitle: {
-    color: "#f0f8ff",
+    fontSize: 32,
+    color: "#ccc",
   },
 });

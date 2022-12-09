@@ -35,7 +35,7 @@ export default function RegisterScreen() {
       <View style={styles.container}>
         <ImageBackground
           style={styles.image}
-          source={require("../assets/31835.jpg")}
+          source={require("../assets/images/31835.jpg")}
         >
           <KeyboardAvoidingView
             behavior={Platform.OS == "ios" ? "padding" : "height"}

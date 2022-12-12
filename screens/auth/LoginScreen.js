@@ -17,7 +17,7 @@ const initialState = {
   password: "",
 };
 
-export default function LoginScreen() {
+export default function LoginScreen({ navigation }) {
   console.log(Platform.OS);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
@@ -34,7 +34,7 @@ export default function LoginScreen() {
       <View style={styles.container}>
         <ImageBackground
           style={styles.image}
-          source={require("../assets/images/31835.jpg")}
+          source={require("../../assets/images/mountain.jpg")}
         >
           <KeyboardAvoidingView
             behavior={Platform.OS == "ios" ? "padding" : "height"}
@@ -86,6 +86,12 @@ export default function LoginScreen() {
               >
                 <Text style={styles.btnTitle}>Sign in</Text>
               </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("Register")}
+                style={styles.btnTrans}
+              >
+                <Text style={{ fontSize: 16, color: "#f0f8ff" }}>Sign Up</Text>
+              </TouchableOpacity>
             </View>
           </KeyboardAvoidingView>
         </ImageBackground>
@@ -121,6 +127,7 @@ const styles = StyleSheet.create({
     height: 40,
     marginTop: 40,
     justifyContent: "center",
+    marginHorizontal: 20,
     alignItems: "center",
     ...Platform.select({
       ios: {
@@ -140,5 +147,15 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 32,
     color: "#ccc",
+  },
+  btnTrans: {
+    marginTop: 20,
+    marginHorizontal: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    height: 40,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: "#4169e1",
   },
 });

@@ -7,7 +7,6 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 // import icons
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
 
 import RegisterScreen from "./screens/auth/RegistrationScreen";
 import LoginScreen from "./screens/auth/LoginScreen";
@@ -37,7 +36,7 @@ export const useRoute = (isAuth) => {
   }
 
   return (
-    <MainTab.Navigator tabBarOptions={{ showLabel: false }}>
+    <MainTab.Navigator>
       <MainTab.Screen
         options={{
           tabBarIcon: ({ focused, size, color }) => (
@@ -47,7 +46,7 @@ export const useRoute = (isAuth) => {
               color={color}
             />
           ),
-          title: false,
+
           headerRight: () => (
             <Button
               onPress={() => alert("This is a button!")}
@@ -64,7 +63,6 @@ export const useRoute = (isAuth) => {
           tabBarIcon: ({ focused, size, color }) => (
             <MaterialIcons name="post-add" size={35} color={color} />
           ),
-          title: false,
         }}
         name="Create"
         component={CreatePostsScreen}
@@ -74,7 +72,6 @@ export const useRoute = (isAuth) => {
           tabBarIcon: ({ focused, size, color }) => (
             <MaterialCommunityIcons name="post" size={35} color={color} />
           ),
-          title: false,
         }}
         name="Posts"
         component={PostsScreen}

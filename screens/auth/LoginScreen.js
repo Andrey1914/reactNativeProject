@@ -90,7 +90,7 @@ export default function LoginScreen({ navigation }) {
                 onPress={() => navigation.navigate("Register")}
                 style={styles.btnTrans}
               >
-                <Text style={{ fontSize: 16, color: "#f0f8ff" }}>Sign Up</Text>
+                <Text style={{ fontSize: 16, color: "#f0f8ff" }}>Sign up</Text>
               </TouchableOpacity>
             </View>
           </KeyboardAvoidingView>

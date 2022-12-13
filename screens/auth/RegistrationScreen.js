@@ -102,7 +102,7 @@ export default function RegisterScreen({ navigation }) {
                 onPress={() => navigation.navigate("Login")}
                 style={styles.btnTrans}
               >
-                <Text style={{ fontSize: 16, color: "#f0f8ff" }}>Sign Up</Text>
+                <Text style={{ fontSize: 16, color: "#f0f8ff" }}>Sign ip</Text>
               </TouchableOpacity>
             </View>
           </KeyboardAvoidingView>

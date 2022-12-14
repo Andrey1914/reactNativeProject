@@ -4,7 +4,7 @@ import { View, Text, StyleSheet } from "react-native";
 const ProfileScreen = () => {
   return (
     <View style={styles.container}>
-      <Text>ProfileScreen</Text>
+      <Text style={styles.title}>Profile Screen</Text>
     </View>
   );
 };
@@ -14,6 +14,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#fff",
+  },
+  title: {
+    fontFamily: "Montserrat-Thin",
+    fontSize: 32,
   },
 });
 

@@ -90,7 +90,7 @@ export default function LoginScreen({ navigation }) {
                 onPress={() => navigation.navigate("Register")}
                 style={styles.btnTrans}
               >
-                <Text style={{ fontSize: 16, color: "#f0f8ff" }}>Sign up</Text>
+                <Text style={styles.btnTransTitle}>Sign up</Text>
               </TouchableOpacity>
             </View>
           </KeyboardAvoidingView>
@@ -117,8 +117,9 @@ const styles = StyleSheet.create({
     color: "#ccc",
   },
   inputTitle: {
+    fontFamily: "Montserrat-Regular",
     color: "#ccc",
-    fontSize: 12,
+    fontSize: 16,
     marginBottom: 8,
   },
   btn: {
@@ -142,9 +143,11 @@ const styles = StyleSheet.create({
   },
   btnTitle: {
     color: Platform.OS === "ios" ? "#4169e1" : "#f0f8ff",
+    fontFamily: "Montserrat-Regular",
     fontSize: 16,
   },
   headerTitle: {
+    fontFamily: "Montserrat-Bold",
     fontSize: 32,
     color: "#ccc",
   },
@@ -157,5 +160,10 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     borderWidth: 1,
     borderColor: "#4169e1",
+  },
+  btnTransTitle: {
+    fontSize: 16,
+    fontFamily: "Montserrat-Regular",
+    color: "#f0f8ff",
   },
 });

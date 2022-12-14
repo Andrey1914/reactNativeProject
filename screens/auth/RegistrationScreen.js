@@ -47,7 +47,7 @@ export default function RegisterScreen({ navigation }) {
             >
               <View
                 style={{
-                  marginTop: 30,
+                  // marginTop: 20,
                   marginLeft: "auto",
                   marginRight: "auto",
                 }}
@@ -102,7 +102,7 @@ export default function RegisterScreen({ navigation }) {
                 onPress={() => navigation.navigate("Login")}
                 style={styles.btnTrans}
               >
-                <Text style={{ fontSize: 16, color: "#f0f8ff" }}>Sign ip</Text>
+                <Text style={styles.btnTransTitle}>Sign in</Text>
               </TouchableOpacity>
             </View>
           </KeyboardAvoidingView>
@@ -130,7 +130,8 @@ const styles = StyleSheet.create({
   },
   inputTitle: {
     color: "#ccc",
-    fontSize: 12,
+    fontFamily: "Montserrat-Regular",
+    fontSize: 16,
     marginBottom: 8,
   },
   btn: {
@@ -154,10 +155,13 @@ const styles = StyleSheet.create({
   },
   btnTitle: {
     color: Platform.OS === "ios" ? "#4169e1" : "#f0f8ff",
+    fontFamily: "Montserrat-Regular",
     fontSize: 16,
   },
   headerTitle: {
-    fontSize: 24,
+    fontFamily: "Montserrat-Bold",
+    fontSize: 32,
+    textAlign: "center",
     color: "#ccc",
   },
   btnTrans: {
@@ -169,5 +173,10 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     borderWidth: 1,
     borderColor: "#4169e1",
+  },
+  btnTransTitle: {
+    fontSize: 16,
+    fontFamily: "Montserrat-Regular",
+    color: "#f0f8ff",
   },
 });

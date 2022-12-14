@@ -4,7 +4,7 @@ import { View, Text, StyleSheet } from "react-native";
 const PostsScreen = () => {
   return (
     <View style={styles.container}>
-      <Text>PostsScreen</Text>
+      <Text style={styles.title}>Posts Screen</Text>
     </View>
   );
 };
@@ -14,6 +14,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#fff",
+  },
+  title: {
+    fontFamily: "Montserrat-Thin",
+    fontSize: 32,
   },
 });
 

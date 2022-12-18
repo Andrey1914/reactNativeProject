@@ -13,11 +13,19 @@ import LoginScreen from "./screens/auth/LoginScreen";
 import ProfileScreen from "./screens/mainScreen/ProfileScreen";
 import PostsScreen from "./screens/mainScreen/PostsScreen";
 import CreatePostsScreen from "./screens/mainScreen/CreatePostsScreen";
+import HomeScreen from "./screens/mainScreen/HomeScreen";
 
 const AuthStack = createNativeStackNavigator();
 const MainTab = createBottomTabNavigator();
 
 export const useRoute = (isAuth) => {
+  <AuthStack.Navigator>
+    <AuthStack.Screen
+      options={{ headerShown: false }}
+      name="HomeScreen"
+      component={HomeScreen}
+    />
+  </AuthStack.Navigator>;
   if (!isAuth) {
     return (
       <AuthStack.Navigator>
@@ -36,9 +44,14 @@ export const useRoute = (isAuth) => {
   }
 
   return (
-    <MainTab.Navigator>
+    <MainTab.Navigator
+      screenOptions={{
+        tabBarShowLabel: false,
+      }}
+    >
       <MainTab.Screen
         options={{
+          title: false,
           tabBarIcon: ({ focused, size, color }) => (
             <MaterialCommunityIcons
               name="face-man-profile"
@@ -60,6 +73,7 @@ export const useRoute = (isAuth) => {
       />
       <MainTab.Screen
         options={{
+          headerShown: false,
           tabBarIcon: ({ focused, size, color }) => (
             <MaterialIcons name="post-add" size={35} color={color} />
           ),
@@ -69,6 +83,7 @@ export const useRoute = (isAuth) => {
       />
       <MainTab.Screen
         options={{
+          headerShown: false,
           tabBarIcon: ({ focused, size, color }) => (
             <MaterialCommunityIcons name="post" size={35} color={color} />
           ),

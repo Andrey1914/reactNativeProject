@@ -17,7 +17,7 @@ const initialState = {
   password: "",
 };
 
-export default function LoginScreen({ navigation }) {
+export default function LoginScreen({ navigation, route }) {
   console.log(Platform.OS);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
@@ -28,6 +28,8 @@ export default function LoginScreen({ navigation }) {
     console.log(state);
     setState(initialState);
   };
+
+  // const { userId } = route.params;
 
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
@@ -52,6 +54,7 @@ export default function LoginScreen({ navigation }) {
                 }}
               >
                 <Text style={styles.headerTitle}>Welcome back!</Text>
+                <Text>User Id {userId}</Text>
               </View>
               <View style={{ marginTop: 20 }}>
                 <Text style={styles.inputTitle}>Email addres</Text>
@@ -60,7 +63,7 @@ export default function LoginScreen({ navigation }) {
                   textAlign={"center"}
                   onFocus={() => setIsShowKeyboard(true)}
                   value={state.email}
-                  onChange={(nativeEvent) => console.log(nativeEvent)}
+                  // onChange={(nativeEvent) => console.log(nativeEvent)}
                   onChangeText={(value) =>
                     setState((prevState) => ({ ...prevState, email: value }))
                   }
@@ -83,6 +86,7 @@ export default function LoginScreen({ navigation }) {
                 activeOpacity={0.8}
                 style={styles.btn}
                 onPress={keyboardHide}
+                // onPress={() => navigation.navigate("HomeScreen")}
               >
                 <Text style={styles.btnTitle}>Sign in</Text>
               </TouchableOpacity>

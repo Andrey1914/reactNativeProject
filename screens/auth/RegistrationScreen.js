@@ -95,6 +95,7 @@ export default function RegisterScreen({ navigation }) {
                 activeOpacity={0.8}
                 style={styles.btn}
                 onPress={keyboardHide}
+                // onPress={() => navigation.navigate("HomeScreen")}
               >
                 <Text style={styles.btnTitle}>Sign up</Text>
               </TouchableOpacity>

@@ -5,7 +5,7 @@ import { authStateChangeUser } from "../../redux/authOperations";
 
 import LoginScreen from "./LoginScreen";
 import RegistrationScreen from "./RegistrationScreen";
-import HomeScreen from "../mainScreen/HomeScreen";
+import HomeScreen from "../MainScreen/HomeScreen";
 
 const AuthStack = createNativeStackNavigator();
 

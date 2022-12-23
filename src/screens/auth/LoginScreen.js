@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -11,25 +11,38 @@ import {
   TouchableWithoutFeedback,
   ImageBackground,
 } from "react-native";
+import { authSignInUser } from "../../redux/authOperations";
+import { useDispatch } from "react-redux";
 
-const initialState = {
-  email: "",
-  password: "",
-};
-
-export default function LoginScreen({ navigation, route }) {
-  console.log(Platform.OS);
+export default function LoginScreen({ navigation }) {
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
-  const [state, setState] = useState(initialState);
+  const [isSecureTextEntry, IsSecureTextEntry] = useState(true);
+
+  const dispatch = useDispatch();
 
   const keyboardHide = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
-    console.log(state);
-    setState(initialState);
   };
 
-  // const { userId } = route.params;
+  const onSubmit = async () => {
+    keyboardHide();
+    dispatch(authSignInUser({ email, password }));
+    setEmail("");
+    setPassword("");
+  };
+
+  useEffect(() => {
+    const hideKeyboard = Keyboard.addListener("keyboardDidHide", () => {
+      setIsShowKeyboard(false);
+    });
+
+    return () => {
+      hideKeyboard.remove();
+    };
+  }, []);
 
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
@@ -43,59 +56,74 @@ export default function LoginScreen({ navigation, route }) {
           >
             <View
               style={{
+                ...styles.formBackdrop,
                 paddingHorizontal: 40,
               }}
             >
               <View
                 style={{
+                  ...styles.form,
                   marginTop: 10,
                   marginLeft: "auto",
                   marginRight: "auto",
                 }}
               >
-                <Text style={styles.headerTitle}>Welcome back!</Text>
-                <Text>User Id {userId}</Text>
+                <View style={styles.header}>
+                  <Text style={styles.headerTitle}>Log in</Text>
+                </View>
+                <View style={{ marginTop: 20 }}>
+                  <Text style={styles.inputTitle}>Email address</Text>
+                  <TextInput
+                    style={styles.input}
+                    value={email}
+                    textAlign={"center"}
+                    onFocus={() => setIsShowKeyboard(true)}
+                    onChangeText={setEmail}
+                    placeholder="Email"
+                    placeholderTextColor="#ccc"
+                    keyboardType="email-address"
+                  />
+                </View>
+                <View style={{ marginTop: 20 }}>
+                  <Text style={styles.inputTitle}>Password</Text>
+                  <TextInput
+                    style={styles.input}
+                    textAlign={"center"}
+                    secureTextEntry={isSecureTextEntry}
+                    onFocus={() => setIsShowKeyboard(true)}
+                    value={password}
+                    onChangeText={setPassword}
+                    placeholder="Password"
+                    placeholderTextColor="#ccc"
+                  />
+                  <View style={styles.showPasswordBox}>
+                    <Text
+                      style={styles.text}
+                      onPress={() => {
+                        IsSecureTextEntry(!isSecureTextEntry);
+                      }}
+                    >
+                      {isSecureTextEntry ? "Show password" : "Hide password"}
+                    </Text>
+                  </View>
+                </View>
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  style={styles.btn}
+                  onPress={onSubmit}
+                >
+                  <Text style={styles.btnTitle}>Sign in</Text>
+                </TouchableOpacity>
+                <View style={styles.loginView}>
+                  <Text style={styles.loginText}>No account?</Text>
+                </View>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate("Registeration")}
+                  style={styles.btnTrans}
+                >
+                  <Text style={styles.btnTransTitle}>Sign up</Text>
+                </TouchableOpacity>
               </View>
-              <View style={{ marginTop: 20 }}>
-                <Text style={styles.inputTitle}>Email addres</Text>
-                <TextInput
-                  style={styles.input}
-                  textAlign={"center"}
-                  onFocus={() => setIsShowKeyboard(true)}
-                  value={state.email}
-                  // onChange={(nativeEvent) => console.log(nativeEvent)}
-                  onChangeText={(value) =>
-                    setState((prevState) => ({ ...prevState, email: value }))
-                  }
-                />
-              </View>
-              <View style={{ marginTop: 20 }}>
-                <Text style={styles.inputTitle}>Password</Text>
-                <TextInput
-                  style={styles.input}
-                  textAlign={"center"}
-                  secureTextEntry={true}
-                  onFocus={() => setIsShowKeyboard(true)}
-                  value={state.password}
-                  onChangeText={(value) =>
-                    setState((prevState) => ({ ...prevState, password: value }))
-                  }
-                />
-              </View>
-              <TouchableOpacity
-                activeOpacity={0.8}
-                style={styles.btn}
-                onPress={keyboardHide}
-                // onPress={() => navigation.navigate("HomeScreen")}
-              >
-                <Text style={styles.btnTitle}>Sign in</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => navigation.navigate("Register")}
-                style={styles.btnTrans}
-              >
-                <Text style={styles.btnTransTitle}>Sign up</Text>
-              </TouchableOpacity>
             </View>
           </KeyboardAvoidingView>
         </ImageBackground>
@@ -112,6 +140,15 @@ const styles = StyleSheet.create({
     flex: 1,
     resizeMode: "cover",
     justifyContent: "center",
+  },
+  form: {
+    marginHorizontal: 16,
+  },
+  formBackdrop: {
+    backgroundColor: "#121212",
+    justifyContent: "flex-end",
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
   },
   input: {
     borderWidth: 1,
@@ -150,10 +187,21 @@ const styles = StyleSheet.create({
     fontFamily: "Montserrat-Regular",
     fontSize: 16,
   },
+  header: {
+    marginBottom: 33,
+  },
   headerTitle: {
     fontFamily: "Montserrat-Bold",
     fontSize: 32,
     color: "#ccc",
+  },
+  loginView: {
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  loginText: {
+    color: "#fff",
+    textAlign: "center",
   },
   btnTrans: {
     marginTop: 20,

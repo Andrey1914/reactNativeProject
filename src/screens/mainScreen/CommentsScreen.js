@@ -163,11 +163,9 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "#FFF",
-    fontFamily: "DMMono-Regular",
     padding: 6,
   },
   textDate: {
-    fontFamily: "DMMono-Regular",
     textAlign: "right",
     fontSize: 11,
     paddingRight: 6,

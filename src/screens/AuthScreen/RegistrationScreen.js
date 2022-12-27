@@ -104,7 +104,7 @@ export default function RegistrationScreen({ navigation }) {
       <View style={styles.container}>
         <ImageBackground
           style={styles.image}
-          source={require("../../assets/images/mountain.jpg")}
+          source={require("../../../assets/images/mountain.jpg")}
         >
           <KeyboardAvoidingView
             behavior={Platform.OS == "ios" ? "padding" : "height"}
@@ -223,13 +223,13 @@ export default function RegistrationScreen({ navigation }) {
                 <Text style={styles.enterAccountText}>
                   Do you have an account?{" "}
                 </Text>
-                <TouchableOpacity
-                  onPress={() => navigation.navigate("Login")}
-                  style={styles.btnTrans}
-                >
-                  <Text style={styles.btnTransTitle}>Sign in</Text>
-                </TouchableOpacity>
               </View>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("Login")}
+                style={styles.btnTrans}
+              >
+                <Text style={styles.btnTransTitle}>Sign in</Text>
+              </TouchableOpacity>
             </View>
           </KeyboardAvoidingView>
         </ImageBackground>
@@ -249,10 +249,8 @@ const styles = StyleSheet.create({
   },
   form: { marginHorizontal: 16 },
   formBackdrop: {
-    backgroundColor: "#121212",
+    backgroundColor: "transparent",
     justifyContent: "flex-end",
-    borderTopLeftRadius: 25,
-    borderTopRightRadius: 25,
   },
   input: {
     borderWidth: 1,
@@ -295,7 +293,8 @@ const styles = StyleSheet.create({
     marginBottom: 33,
   },
   headerTitle: {
-    fontFamily: "Montserrat-Bold",
+    fontFamily: "Montserrat-Regular",
+    // fontFamily: "Montserrat-Bold",
     fontSize: 32,
     textAlign: "center",
     color: "#ccc",
@@ -304,8 +303,8 @@ const styles = StyleSheet.create({
     height: 120,
     width: 120,
     borderRadius: 16,
-    backgroundColor: "#515151",
-    borderColor: "#fff",
+    backgroundColor: "transparent",
+    borderColor: "#ccc",
     borderWidth: 1,
   },
   centerBox: {
@@ -316,13 +315,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   btnTrans: {
-    marginTop: 20,
-    marginHorizontal: 20,
-    justifyContent: "center",
-    alignItems: "center",
-    height: 40,
     borderRadius: 6,
     borderWidth: 1,
+    height: 40,
+    marginTop: 30,
+    justifyContent: "center",
+    alignItems: "center",
+    marginHorizontal: 20,
     borderColor: "#4169e1",
   },
   btnTransTitle: {
@@ -346,7 +345,8 @@ const styles = StyleSheet.create({
   },
   enterAccountText: {
     color: "#fff",
-    fontFamily: "DMMono-Medium",
+    fontFamily: "Montserrat-Regular",
+    // fontFamily: "DMMono-Medium",
     textAlign: "center",
   },
 });

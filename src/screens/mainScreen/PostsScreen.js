@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { pathSlice } from "../../redux/pathReducer";
 import {
   View,
   Text,
@@ -19,6 +20,8 @@ import {
   updateDoc,
   onSnapshot,
 } from "firebase/firestore";
+
+import { db } from "../../firebase/config";
 
 import { Ionicons } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
@@ -190,22 +193,26 @@ const styles = StyleSheet.create({
   },
   textName: {
     color: "#FFF",
-    fontFamily: "DMMono-Medium",
+    // fontFamily: "DMMono-Medium",
+    fontFamily: "Montserrat-Regular",
     fontSize: 13,
   },
   textEmail: {
     color: "#515151",
-    fontFamily: "DMMono-Regular",
+    // fontFamily: "DMMono-Regular",
+    fontFamily: "Montserrat-Regular",
     fontSize: 11,
   },
   textPost: {
     color: "#FFF",
-    fontFamily: "DMMono-Medium",
+    // fontFamily: "DMMono-Medium",
+    fontFamily: "Montserrat-Regular",
     fontSize: 16,
   },
   textLocation: {
     color: "#FFF",
-    fontFamily: "DMMono-Regular",
+    // fontFamily: "DMMono-Regular",
+    fontFamily: "Montserrat-Regular",
     fontSize: 16,
     textDecorationLine: "underline",
   },

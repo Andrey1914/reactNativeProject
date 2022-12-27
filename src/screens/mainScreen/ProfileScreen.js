@@ -26,7 +26,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 
-export default function ProfileScreen({ navigation, route }) {
+export default function RegistrationScreen({ navigation, route }) {
   const { userId, login, avatar } = useSelector((state) => state.auth);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -269,7 +269,8 @@ const styles = StyleSheet.create({
   },
   titleText: {
     color: "#fff",
-    fontFamily: "DMMono-Medium",
+    // fontFamily: "DMMono-Medium",
+    fontFamily: "Montserrat-Regular",
     textAlign: "center",
     marginTop: 92,
     marginBottom: 33,
@@ -291,12 +292,14 @@ const styles = StyleSheet.create({
   },
   textPost: {
     color: "#FFF",
-    fontFamily: "DMMono-Medium",
+    // fontFamily: "DMMono-Medium",
+    fontFamily: "Montserrat-Regular",
     fontSize: 16,
   },
   textLocation: {
     color: "#FFF",
-    fontFamily: "DMMono-Regular",
+    // fontFamily: "DMMono-Regular",
+    fontFamily: "Montserrat-Regular",
     fontSize: 16,
     textDecorationLine: "underline",
   },

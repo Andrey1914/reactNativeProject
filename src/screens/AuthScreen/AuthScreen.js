@@ -9,8 +9,8 @@ import HomeScreen from "../MainScreen/HomeScreen";
 
 const AuthStack = createNativeStackNavigator();
 
-export default function AuthStack() {
-  const { state } = useSelector(() => state.auth);
+export default function AuthScreen() {
+  const { state } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export default function AuthStack() {
           <>
             <AuthStack.Screen
               options={{ headerShown: false }}
-              name="Log in"
+              name="Login"
               component={LoginScreen}
             />
             <AuthStack.Screen

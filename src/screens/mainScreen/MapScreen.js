@@ -33,6 +33,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#121212",
   },
   text: {
+    fontFamily: "Montserrat-Regular",
     textAlign: "center",
     color: "#FFF",
   },

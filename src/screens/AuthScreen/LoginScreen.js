@@ -49,7 +49,7 @@ export default function LoginScreen({ navigation }) {
       <View style={styles.container}>
         <ImageBackground
           style={styles.image}
-          source={require("../../assets/images/mountain.jpg")}
+          source={require("../../../assets/images/mountain.jpg")}
         >
           <KeyboardAvoidingView
             behavior={Platform.OS == "ios" ? "padding" : "height"}
@@ -60,14 +60,7 @@ export default function LoginScreen({ navigation }) {
                 paddingHorizontal: 40,
               }}
             >
-              <View
-                style={{
-                  ...styles.form,
-                  marginTop: 10,
-                  marginLeft: "auto",
-                  marginRight: "auto",
-                }}
-              >
+              <View style={styles.form}>
                 <View style={styles.header}>
                   <Text style={styles.headerTitle}>Log in</Text>
                 </View>
@@ -118,7 +111,7 @@ export default function LoginScreen({ navigation }) {
                   <Text style={styles.loginText}>No account?</Text>
                 </View>
                 <TouchableOpacity
-                  onPress={() => navigation.navigate("Registeration")}
+                  onPress={() => navigation.navigate("Registration")}
                   style={styles.btnTrans}
                 >
                   <Text style={styles.btnTransTitle}>Sign up</Text>
@@ -145,10 +138,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
   },
   formBackdrop: {
-    backgroundColor: "#121212",
+    backgroundColor: "transparent",
     justifyContent: "flex-end",
-    borderTopLeftRadius: 25,
-    borderTopRightRadius: 25,
   },
   input: {
     borderWidth: 1,
@@ -191,7 +182,9 @@ const styles = StyleSheet.create({
     marginBottom: 33,
   },
   headerTitle: {
-    fontFamily: "Montserrat-Bold",
+    fontFamily: "Montserrat-Regular",
+    // fontFamily: "Montserrat-Bold",
+    textAlign: "center",
     fontSize: 32,
     color: "#ccc",
   },

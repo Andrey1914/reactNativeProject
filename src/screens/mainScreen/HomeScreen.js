@@ -24,8 +24,12 @@ export default function HomeScreen({ navigation }) {
         tabBarStyle: { backgroundColor: "#515151", color: "#fff" },
         headerStyle: { backgroundColor: "#515151" },
         headerTitleAlign: "center",
-        headerTitleStyle: { color: "#fff" },
-        headerPressColor: "#FF6C00",
+        headerTitleStyle: {
+          color: "#fff",
+          fontFamily: "Montserrat-Regular",
+          fontSize: 24,
+        },
+        headerPressColor: "#4169e1",
       }}
     >
       <HomeStack.Screen
@@ -35,7 +39,7 @@ export default function HomeScreen({ navigation }) {
             <AntDesign
               name="appstore-o"
               size={24}
-              color={focused ? "#FF6C00" : "#fff"}
+              color={focused ? "#4169e1" : "#fff"}
             />
           ),
         }}
@@ -44,25 +48,26 @@ export default function HomeScreen({ navigation }) {
       />
       <HomeStack.Screen
         options={{
+          // headerShown: false,
           tabBarIcon: ({ focused }) => (
             <FontAwesome
               name="plus-square-o"
               size={24}
-              color={focused ? "#FF6C00" : "#fff"}
+              color={focused ? "#4169e1" : "#fff"}
             />
           ),
           headerLeft: ({ pressColor }) => (
             <TouchableOpacity
               activeOpacity={0.8}
               style={styles.logOut}
-              onPress={() => navigation.navgate("Posts")}
+              onPress={() => navigation.navigate("Posts")}
             >
               <AntDesign name="arrowleft" size={24} color={pressColor} />
             </TouchableOpacity>
           ),
           tabBarStyle: { display: "none" },
         }}
-        name="CreatePosts"
+        name="Create post"
         component={CreatePostsScreen}
       />
       <HomeStack.Screen
@@ -72,7 +77,7 @@ export default function HomeScreen({ navigation }) {
             <AntDesign
               name="user"
               size={24}
-              color={focused ? "#FF6C00" : "#fff"}
+              color={focused ? "#4169e1" : "#fff"}
             />
           ),
         }}
@@ -89,7 +94,7 @@ export default function HomeScreen({ navigation }) {
                 path ? navigation.navigate(path) : navigation.navigate("Posts");
               }}
             >
-              <AntDesign name="arrowleft" size={24} color="#FF6C00" />
+              <AntDesign name="arrowleft" size={24} color="#4169e1" />
             </TouchableOpacity>
           ),
           tabBarButton: () => null,
@@ -109,7 +114,7 @@ export default function HomeScreen({ navigation }) {
                 path ? navigation.navigate(path) : navigation.navigate("Posts");
               }}
             >
-              <AntDesign name="arrowleft" size={24} color="#FF6C00" />
+              <AntDesign name="arrowleft" size={24} color="#4169e1" />
             </TouchableOpacity>
           ),
           tabBarButton: () => null,

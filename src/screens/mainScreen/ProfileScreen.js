@@ -90,23 +90,18 @@ export default function RegistrationScreen({ navigation, route }) {
     <View style={styles.container}>
       <ImageBackground
         source={require("../../../assets/images/mountain.jpg")}
-        style={styles.background}
+        style={styles.image}
       >
         <ScrollView
           contentContainerStyle={{ flex: posts.length > 0 ? "none" : 1 }}
           bounces={false}
         >
+          <View style={styles.logout}>
+            <TouchableOpacity onPress={() => dispatch(authSignOutUser())}>
+              <MaterialCommunityIcons name="logout" size={24} color="#4169e1" />
+            </TouchableOpacity>
+          </View>
           <View style={styles.formBackdrop}>
-            <View style={styles.logout}>
-              <TouchableOpacity onPress={() => dispatch(authSignOutUser())}>
-                <MaterialCommunityIcons
-                  name="logout"
-                  size={24}
-                  color="#ff6c00"
-                />
-              </TouchableOpacity>
-            </View>
-
             <View style={styles.centerBox}>
               <View style={styles.avatarBox}>
                 <Image
@@ -127,10 +122,10 @@ export default function RegistrationScreen({ navigation, route }) {
                       cy="12.5"
                       r="12"
                       fill="none"
-                      stroke="#FF6C00"
+                      stroke="#4169e1"
                     ></Circle>
                     <Path
-                      fill="#FF6C00"
+                      fill="#4169e1"
                       fillRule="evenodd"
                       d="M13 6h-1v6H6v1h6v6h1v-6h6v-1h-6V6z"
                       clipRule="evenodd"
@@ -221,24 +216,20 @@ export default function RegistrationScreen({ navigation, route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#fff",
   },
-  background: {
+  image: {
     flex: 1,
     resizeMode: "cover",
+    justifyContent: "center",
   },
   formBackdrop: {
-    backgroundColor: "#121212",
-    borderTopLeftRadius: 25,
-    borderTopRightRadius: 25,
+    backgroundColor: "transparent",
     marginTop: 150,
     flex: 1,
   },
   logout: {
     position: "absolute",
-    top: 24,
+    top: 35,
     right: 24,
     zIndex: 1,
   },
@@ -246,16 +237,16 @@ const styles = StyleSheet.create({
   avatarBox: {
     height: 120,
     width: 120,
-    borderRadius: 16,
-    backgroundColor: "#515151",
-    borderColor: "#fff",
+    borderRadius: 5,
+    backgroundColor: "#fff",
+    borderColor: "#ccc",
     borderWidth: 1,
   },
   centerBox: {
     position: "absolute",
     left: 0,
     right: 0,
-    top: -60,
+    top: -120,
     alignItems: "center",
   },
   loader: {
@@ -265,16 +256,15 @@ const styles = StyleSheet.create({
   addIconBox: {
     position: "absolute",
     right: -13,
-    bottom: 14,
+    bottom: 8,
   },
   titleText: {
     color: "#fff",
-    // fontFamily: "DMMono-Medium",
     fontFamily: "Montserrat-Regular",
     textAlign: "center",
-    marginTop: 92,
+    marginTop: 10,
     marginBottom: 33,
-    fontSize: 30,
+    fontSize: 24,
   },
   postBox: {
     marginBottom: 34,
@@ -284,7 +274,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginTop: 11,
   },
-  comentsInfo: {
+  commentsInfo: {
     flexDirection: "row",
   },
   locationInfo: {
@@ -292,13 +282,11 @@ const styles = StyleSheet.create({
   },
   textPost: {
     color: "#FFF",
-    // fontFamily: "DMMono-Medium",
     fontFamily: "Montserrat-Regular",
     fontSize: 16,
   },
   textLocation: {
     color: "#FFF",
-    // fontFamily: "DMMono-Regular",
     fontFamily: "Montserrat-Regular",
     fontSize: 16,
     textDecorationLine: "underline",

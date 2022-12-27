@@ -29,7 +29,7 @@ import { AntDesign } from "@expo/vector-icons";
 
 export default function CreatePostsScreen({ navigation }) {
   const [isShownKeyboard, setIsShownKeyboard] = useState(false);
-  const [snap, setSnap] = useState(null);
+  const [camera, setCamera] = useState(null);
   const [photoPath, setPhotoPath] = useState("");
   const [photoName, setPhotoName] = useState("");
   const [locationName, setLocationName] = useState("");
@@ -38,7 +38,6 @@ export default function CreatePostsScreen({ navigation }) {
   const { userId, login } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    getAllComments();
     const hideKeyboard = Keyboard.addListener("keyboardDidHide", () => {
       setIsShownKeyboard(false);
     });
@@ -49,7 +48,7 @@ export default function CreatePostsScreen({ navigation }) {
   }, []);
 
   const takePhoto = async () => {
-    if (!snap) {
+    if (!camera) {
       console.log("error");
       return;
     }
@@ -60,7 +59,7 @@ export default function CreatePostsScreen({ navigation }) {
         console.log("Permission to access camera was denied");
         return;
       }
-      const photo = await snap.takePictureAsync();
+      const photo = await Camera.takePictureAsync();
       setPhotoPath(photo.uri);
     } catch (error) {
       console.log(error.message);
@@ -163,7 +162,7 @@ export default function CreatePostsScreen({ navigation }) {
             }}
           >
             <View style={styles.addPhotoContainer}>
-              <Camera style={styles.addPhotoBox} ref={setSnap}>
+              <Camera style={styles.addPhotoBox} ref={setCamera}>
                 <TouchableOpacity style={styles.photoIcon} onPress={takePhoto}>
                   <MaterialIcons
                     name="photo-camera"
@@ -213,7 +212,7 @@ export default function CreatePostsScreen({ navigation }) {
                 <Ionicons
                   name="location-outline"
                   size={24}
-                  color="#fff"
+                  color="#ccc"
                   style={styles.locationIcon}
                 />
               </View>
@@ -223,7 +222,7 @@ export default function CreatePostsScreen({ navigation }) {
                   ...styles.button,
                   display: isShownKeyboard ? "none" : "flex",
                   backgroundColor: !(photoPath && photoName && locationName)
-                    ? "#515151"
+                    ? "#4169e1"
                     : "#fff",
                 }}
                 disabled={!(photoPath && photoName && locationName) || loading}
@@ -237,7 +236,7 @@ export default function CreatePostsScreen({ navigation }) {
                       style={{
                         ...styles.btnText,
                         color: !(photoPath && photoName && locationName)
-                          ? "#fff"
+                          ? "#f0f8ff"
                           : "#000",
                       }}
                     >
@@ -247,19 +246,16 @@ export default function CreatePostsScreen({ navigation }) {
                 </View>
               </TouchableOpacity>
 
-              <View
-                style={{
-                  ...styles.deleteButtonBox,
-                  display: isShownKeyboard ? "none" : "flex",
-                }}
-              >
-                <TouchableOpacity
-                  style={styles.deleteButtonBox}
-                  onPress={reset}
+              <TouchableOpacity style={styles.deleteButton} onPress={reset}>
+                <View
+                  style={{
+                    ...styles.deleteButtonBox,
+                    display: isShownKeyboard ? "none" : "flex",
+                  }}
                 >
-                  <AntDesign name="delete" size={24} color="#515151" />
-                </TouchableOpacity>
-              </View>
+                  <AntDesign name="delete" size={24} color="#f0f8ff" />
+                </View>
+              </TouchableOpacity>
             </View>
           </View>
         </KeyboardAvoidingView>
@@ -274,6 +270,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   title: {
+    fontFamily: "Montserrat-Regular",
     fontSize: 32,
   },
   form: {
@@ -307,24 +304,29 @@ const styles = StyleSheet.create({
   },
   addPhoto: { marginTop: 8 },
   upLoadPhotoText: {
-    color: "#FFF",
+    fontFamily: "Montserrat-Regular",
+    color: "#ccc",
     fontSize: 16,
+    textAlign: "center",
   },
   input: {
-    color: "#fff",
+    color: "#000",
     padding: 5,
     borderRadius: 5,
-    borderColor: "#fff",
+    borderColor: "#ccc",
     borderWidth: 1,
     height: 40,
     paddingLeft: 16,
+    marginBottom: 16,
+    fontFamily: "Montserrat-Regular",
     fontSize: 16,
   },
   button: {
     height: 40,
-    borderRadius: 100,
+    borderRadius: 5,
     justifyContent: "center",
-    marginTop: 20,
+    marginHorizontal: 20,
+    marginBottom: 16,
   },
   textButton: {
     flex: 1,
@@ -333,23 +335,25 @@ const styles = StyleSheet.create({
   },
   btnText: {
     textAlign: "center",
-    fontSize: 16,
+    fontFamily: "Montserrat-Regular",
+    fontSize: 18,
   },
   locationIcon: {
     position: "absolute",
-    left: 10,
+    left: 8,
     top: 7,
   },
-  deletButtonBox: {
+  deleteButtonBox: {
     alignItems: "center",
   },
-  deletButton: {
+  deleteButton: {
     justifyContent: "center",
     alignItems: "center",
-    width: 70,
+    // width: 60,
     height: 40,
-    backgroundColor: "#FF6C00",
-    borderRadius: 100,
+    backgroundColor: "#4169e1",
+    borderRadius: 5,
+    marginHorizontal: 20,
     marginBottom: 36,
   },
 });

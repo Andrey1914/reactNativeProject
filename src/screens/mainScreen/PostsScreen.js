@@ -8,6 +8,7 @@ import {
   FlatList,
   Image,
   TouchableOpacity,
+  ImageBackground,
 } from "react-native";
 
 import {
@@ -70,112 +71,120 @@ export default function PostsScreen({ navigation, route }) {
 
   return (
     <View style={styles.container}>
-      <View
-        style={{
-          marginHorizontal: 16,
-          marginTop: 32,
-          marginBottom: 70,
-        }}
+      <ImageBackground
+        style={styles.image}
+        source={require("../../../assets/images/mountain.jpg")}
       >
-        <TouchableOpacity
-          style={styles.userBox}
-          onPress={() => navigation.navigate("Profile")}
+        <View
+        // style={{
+        //   backgroundColor: "#fff",
+        //   marginHorizontal: 16,
+        //   marginTop: 32,
+        //   marginBottom: 70,
+        // }}
         >
-          {avatar ? (
-            <Image
-              source={{ uri: avatar }}
-              style={{
-                height: 60,
-                width: 60,
-                borderRadius: 16,
-              }}
-            ></Image>
-          ) : (
-            <View
-              style={{
-                width: 60,
-                width: 60,
-                borderRadius: 16,
-                backgroundColor: "#515151",
-              }}
-            ></View>
-          )}
-          <View style={{ marginLeft: 8 }}>
-            <Text style={styles.textName}>{login}</Text>
-
-            <Text style={styles.textEmail}>{email}</Text>
-          </View>
-        </TouchableOpacity>
-
-        <FlatList
-          data={posts}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <View style={styles.postBox}>
+          <TouchableOpacity
+            style={styles.userBox}
+            onPress={() => navigation.navigate("Profile")}
+          >
+            {avatar ? (
               <Image
-                source={{ uri: item.photo }}
-                style={{ height: 240, borderRadius: 16 }}
+                source={{ uri: avatar }}
+                style={{
+                  height: 60,
+                  width: 60,
+                  borderRadius: 16,
+                }}
               ></Image>
+            ) : (
+              <View
+                style={{
+                  width: 40,
+                  width: 40,
+                  borderRadius: 5,
+                  backgroundColor: "#fff",
+                }}
+              ></View>
+            )}
+            <View style={{ marginLeft: 8 }}>
+              <Text style={styles.textName}>{login}</Text>
 
-              <View style={{ marginTop: 8 }}>
-                <Text style={styles.textPost}>{item.name}</Text>
-              </View>
+              <Text style={styles.textEmail}>{email}</Text>
+            </View>
+          </TouchableOpacity>
 
-              <View style={styles.postInfoBox}>
-                <View style={styles.commentsInfo}>
-                  <TouchableOpacity
-                    onPress={async () => {
-                      navigation.navigate("Comments", {
-                        photo: item.photo,
-                        id: item.id,
-                      });
-                      dispatch(pathSlice.actions.setPath({ path: route.name }));
-                    }}
-                  >
-                    <EvilIcons name="comment" size={24} color="#fff" />
-                  </TouchableOpacity>
+          <FlatList
+            data={posts}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <View style={styles.postBox}>
+                <Image
+                  source={{ uri: item.photo }}
+                  style={{ height: 240, borderRadius: 16 }}
+                ></Image>
 
-                  <Text style={styles.textPost}>{item.comments || 0}</Text>
+                <View style={{ marginTop: 8 }}>
+                  <Text style={styles.textPost}>{item.name}</Text>
                 </View>
 
-                <View style={styles.commentsInfo}>
-                  <TouchableOpacity onPress={() => addLike(item.id)}>
-                    {item.likes.includes(`${userId}`) ? (
-                      <AntDesign name="like1" size={24} color="#fff" />
-                    ) : (
-                      <AntDesign name="like2" size={24} color="#fff" />
-                    )}
-                  </TouchableOpacity>
-
-                  <Text style={styles.textPost}>
-                    {" "}
-                    {item.likes?.length || 0}
-                  </Text>
-                </View>
-
-                <View style={styles.locationInfo}>
-                  <Ionicons name="location-outline" size={20} color="#fff" />
-
-                  <Text
-                    style={styles.textLocation}
-                    onPress={() => {
-                      navigation.navigate("Map", {
-                        location: item.location,
-                        title: item.locationName,
-                      }),
+                <View style={styles.postInfoBox}>
+                  <View style={styles.commentsInfo}>
+                    <TouchableOpacity
+                      onPress={async () => {
+                        navigation.navigate("Comments", {
+                          photo: item.photo,
+                          id: item.id,
+                        });
                         dispatch(
                           pathSlice.actions.setPath({ path: route.name })
                         );
-                    }}
-                  >
-                    {item.locationName}
-                  </Text>
+                      }}
+                    >
+                      <EvilIcons name="comment" size={24} color="#fff" />
+                    </TouchableOpacity>
+
+                    <Text style={styles.textPost}>{item.comments || 0}</Text>
+                  </View>
+
+                  <View style={styles.commentsInfo}>
+                    <TouchableOpacity onPress={() => addLike(item.id)}>
+                      {item.likes.includes(`${userId}`) ? (
+                        <AntDesign name="like1" size={24} color="#fff" />
+                      ) : (
+                        <AntDesign name="like2" size={24} color="#fff" />
+                      )}
+                    </TouchableOpacity>
+
+                    <Text style={styles.textPost}>
+                      {" "}
+                      {item.likes?.length || 0}
+                    </Text>
+                  </View>
+
+                  <View style={styles.locationInfo}>
+                    <Ionicons name="location-outline" size={20} color="#fff" />
+
+                    <Text
+                      style={styles.textLocation}
+                      onPress={() => {
+                        navigation.navigate("Map", {
+                          location: item.location,
+                          title: item.locationName,
+                        }),
+                          dispatch(
+                            pathSlice.actions.setPath({ path: route.name })
+                          );
+                      }}
+                    >
+                      {item.locationName}
+                    </Text>
+                  </View>
                 </View>
               </View>
-            </View>
-          )}
-        ></FlatList>
-      </View>
+            )}
+          ></FlatList>
+        </View>
+      </ImageBackground>
     </View>
   );
 }
@@ -183,40 +192,47 @@ export default function PostsScreen({ navigation, route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "flex-start",
-    backgroundColor: "#121212",
+    // justifyContent: "flex-start",
+    // backgroundColor: "#fff",
+  },
+  image: {
+    flex: 1,
+    resizeMode: "cover",
+    // justifyContent: "center",
   },
   userBox: {
-    marginBottom: 32,
+    // backgroundColor: "#fff",
+    // marginBottom: 32,
     flexDirection: "row",
-    alignItems: "center",
+    // alignItems: "center",
+    justifyContent: "center",
+    position: "absolute",
+    top: 40,
+    left: 16,
   },
   textName: {
-    color: "#FFF",
-    // fontFamily: "DMMono-Medium",
-    fontFamily: "Montserrat-Regular",
-    fontSize: 13,
+    color: "#f0f8ff",
+    fontFamily: "Montserrat-Bold",
+    fontSize: 16,
   },
   textEmail: {
-    color: "#515151",
-    // fontFamily: "DMMono-Regular",
+    color: "#f0f8ff",
     fontFamily: "Montserrat-Regular",
-    fontSize: 11,
+    fontSize: 12,
   },
   textPost: {
-    color: "#FFF",
-    // fontFamily: "DMMono-Medium",
+    color: "#000",
     fontFamily: "Montserrat-Regular",
     fontSize: 16,
   },
   textLocation: {
     color: "#FFF",
-    // fontFamily: "DMMono-Regular",
     fontFamily: "Montserrat-Regular",
     fontSize: 16,
     textDecorationLine: "underline",
   },
   postBox: {
+    backgroundColor: "#ccc",
     marginBottom: 34,
   },
   postInfoBox: {

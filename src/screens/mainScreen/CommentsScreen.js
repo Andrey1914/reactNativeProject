@@ -35,7 +35,7 @@ export default function CommentsScreen({ route }) {
   const [comment, setComment] = useState("");
   const isFocused = useIsFocused();
 
-  const { userId, login, avatar } = useSelector(() => state.auth);
+  const { userId, login, avatar } = useSelector((state) => state.auth);
 
   const getAllComments = async () => {
     const querySnapshot = await getDocs(
@@ -160,6 +160,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-start",
     backgroundColor: "#121212",
+    // backgroundColor: "#fff",
   },
   text: {
     color: "#FFF",

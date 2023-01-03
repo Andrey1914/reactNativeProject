@@ -59,7 +59,7 @@ export default function CreatePostsScreen({ navigation }) {
         console.log("Permission to access camera was denied");
         return;
       }
-      const photo = await Camera.takePictureAsync();
+      const photo = await camera.takePictureAsync();
       setPhotoPath(photo.uri);
     } catch (error) {
       console.log(error.message);

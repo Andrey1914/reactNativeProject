@@ -42,7 +42,7 @@ export default function CommentsScreen({ route }) {
       collection(db, "posts", `${id}`, "comments")
     );
     let allComments = [];
-    querySnapshot.forEach(() => {
+    querySnapshot.forEach((doc) => {
       allComments.push({ ...doc.data(), id: doc.id });
     });
     setComments(allComments);

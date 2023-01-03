@@ -27,6 +27,7 @@ import { db } from "../../firebase/config";
 import { Ionicons } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export default function PostsScreen({ navigation, route }) {
   const [posts, setPosts] = useState([]);
@@ -112,6 +113,12 @@ export default function PostsScreen({ navigation, route }) {
               <Text style={styles.textEmail}>{email}</Text>
             </View>
           </TouchableOpacity>
+
+          <View style={styles.logout}>
+            <TouchableOpacity onPress={() => dispatch(authSignOutUser())}>
+              <MaterialCommunityIcons name="logout" size={24} color="#4169e1" />
+            </TouchableOpacity>
+          </View>
 
           <FlatList
             data={posts}
@@ -199,6 +206,12 @@ const styles = StyleSheet.create({
     flex: 1,
     resizeMode: "cover",
     // justifyContent: "center",
+  },
+  logout: {
+    position: "absolute",
+    top: 35,
+    right: 24,
+    zIndex: 1,
   },
   userBox: {
     // backgroundColor: "#fff",

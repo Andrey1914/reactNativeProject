@@ -33,10 +33,11 @@ export default function CreatePostsScreen({ navigation }) {
   const [isShownKeyboard, setIsShownKeyboard] = useState(false);
 
   const [snap, setSnap] = useState(null);
-  const [photoPath, setPhotoPath] = useState("");
+  const [photoPath, setPhotoPath] = useState(null);
   const [photoName, setPhotoName] = useState("");
   const [locationName, setLocationName] = useState("");
   const [loading, setLoading] = useState(false);
+  // const [location, setLocation] = useState(null);
 
   const { userId, login } = useSelector((state) => state.auth);
 
@@ -55,6 +56,20 @@ export default function CreatePostsScreen({ navigation }) {
       const { status } = await Camera.requestCameraPermissionsAsync();
       // await MediaLibrary.requestPermissionsAsync();
       // setHasPermission(status === "granted");
+      console.log(status);
+    })();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      // if (status !== "granted") {
+      //   setErrorMsg("Permission to access location was denied");
+      //   return;
+      // }
+
+      // let location = await Location.getCurrentPositionAsync({});
+      // setLocation(location);
       console.log(status);
     })();
   }, []);
@@ -108,16 +123,19 @@ export default function CreatePostsScreen({ navigation }) {
       const postId = uuid.v4().split("-").join("");
       console.log(postId);
       const response = await fetch(photoPath);
-      console.log(photoPath);
+      // console.log(photoPath);
       const file = await response.blob();
-      const storageRef = ref(storage, `posts/${postId}`);
-      console.log(storageRef);
+      const storageRef =
+        // .storage()
+        ref(storage, `posts/${postId}`);
+      // .put(file);
+      console.log("storageRef", storageRef);
       await uploadBytesResumable(storageRef, file);
 
       const photo = await getDownloadURL(storageRef);
-      console.log(storageRef);
-      let { status } = await Location.requestForegroundPermissionsAsync();
+      console.log(photo);
 
+      let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
         console.log("Permission to access location was denied");
         return;
@@ -135,7 +153,7 @@ export default function CreatePostsScreen({ navigation }) {
     try {
       const { photo, location } = await uploadPhotoToServer();
       console.log(photo);
-      console.log(location);
+      // console.log(location);
       await addDoc(collection(db, "posts"), {
         photo,
         name: photoName,
@@ -159,7 +177,7 @@ export default function CreatePostsScreen({ navigation }) {
   const reset = () => {
     setLocationName("");
     setPhotoName("");
-    setPhotoPath("");
+    // setPhoto("");
   };
 
   const onSubmit = async () => {

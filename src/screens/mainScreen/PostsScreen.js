@@ -122,7 +122,7 @@ export default function PostsScreen({ navigation, route }) {
 
           <FlatList
             data={posts}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item, indx) => indx.toString()}
             renderItem={({ item }) => (
               <View style={styles.postBox}>
                 <Image

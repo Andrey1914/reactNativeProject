@@ -23,13 +23,16 @@ import { Camera } from "expo-camera";
 import * as Location from "expo-location";
 import * as ImagePicker from "expo-image-picker";
 
+// import * as MediaLibrary from "expo-media-library";
+
 import { MaterialIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 
 export default function CreatePostsScreen({ navigation }) {
   const [isShownKeyboard, setIsShownKeyboard] = useState(false);
-  const [camera, setCamera] = useState(null);
+
+  const [snap, setSnap] = useState(null);
   const [photoPath, setPhotoPath] = useState("");
   const [photoName, setPhotoName] = useState("");
   const [locationName, setLocationName] = useState("");
@@ -47,20 +50,40 @@ export default function CreatePostsScreen({ navigation }) {
     };
   }, []);
 
+  useEffect(() => {
+    (async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      // await MediaLibrary.requestPermissionsAsync();
+      // setHasPermission(status === "granted");
+      console.log(status);
+    })();
+  }, []);
+
   const takePhoto = async () => {
-    if (!camera) {
+    if (!snap) {
       console.log("error");
       return;
     }
-
     try {
+      // const [permission, requestPermission] = Camera.useCameraPermissions();
+      // if (!permission) {
+      //   await requestPermission();
+      // }
+      // if (!permission.granted !== "granted") {
+      //   // error;
+      //   console.log("Permission to access camera was denied");
+      // }
+      // requestPermission();
       const { status } = await Camera.getCameraPermissionsAsync();
+
       if (status !== "granted") {
         console.log("Permission to access camera was denied");
         return;
       }
-      const photo = await camera.takePictureAsync();
+
+      const photo = await snap.takePictureAsync();
       setPhotoPath(photo.uri);
+      console.log(photo.uri);
     } catch (error) {
       console.log(error.message);
     }
@@ -76,17 +99,23 @@ export default function CreatePostsScreen({ navigation }) {
 
     if (!result.canceled) {
       setPhotoPath(result.assets);
+      console.log(result.assets);
     }
   };
 
   const uploadPhotoToServer = async () => {
     try {
       const postId = uuid.v4().split("-").join("");
+      console.log(postId);
       const response = await fetch(photoPath);
+      console.log(photoPath);
       const file = await response.blob();
-      const storageRef = await ref(storage, `posts/${postId}`);
+      const storageRef = ref(storage, `posts/${postId}`);
+      console.log(storageRef);
       await uploadBytesResumable(storageRef, file);
+
       const photo = await getDownloadURL(storageRef);
+      console.log(storageRef);
       let { status } = await Location.requestForegroundPermissionsAsync();
 
       if (status !== "granted") {
@@ -105,6 +134,8 @@ export default function CreatePostsScreen({ navigation }) {
   const createPost = async () => {
     try {
       const { photo, location } = await uploadPhotoToServer();
+      console.log(photo);
+      console.log(location);
       await addDoc(collection(db, "posts"), {
         photo,
         name: photoName,
@@ -162,7 +193,7 @@ export default function CreatePostsScreen({ navigation }) {
             }}
           >
             <View style={styles.addPhotoContainer}>
-              <Camera style={styles.addPhotoBox} ref={setCamera}>
+              <Camera style={styles.addPhotoBox} ref={setSnap}>
                 <TouchableOpacity style={styles.photoIcon} onPress={takePhoto}>
                   <MaterialIcons
                     name="photo-camera"

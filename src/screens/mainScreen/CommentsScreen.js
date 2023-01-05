@@ -135,7 +135,7 @@ export default function CommentsScreen({ route }) {
               <TextInput
                 style={{ ...styles.input, height: !isShownKeyboard ? 40 : 120 }}
                 placeholder="Add comment..."
-                placeholderTextColor="#ccc"
+                placeholderTextColor="#fff"
                 onFocus={() => setIsShownKeyboard(true)}
                 onChangeText={setComment}
                 value={comment}
@@ -172,10 +172,12 @@ const styles = StyleSheet.create({
     paddingRight: 6,
   },
   input: {
-    padding: 15,
-    backgroundColor: "#515151",
+    padding: 10,
+    // backgroundColor: "#515151",
+    backgroundColor: "#ccc",
     borderWidth: 1,
     borderColor: "#fff",
+    // borderColor: "#000",
     borderRadius: 20,
     color: "#fff",
     paddingEnd: 40,

@@ -46,7 +46,7 @@ export default function PostsScreen({ navigation, route }) {
 
   const addLike = async (id) => {
     const result = await getDoc(doc(db, "posts", `${id}`));
-    if (result.data().likes.includes(`${userId}`)) {
+    if (result.data().likes?.includes(`${userId}`)) {
       await updateDoc(doc(db, "posts", `${id}`), {
         likes: arrayRemove(`${userId}`),
       });
@@ -155,8 +155,10 @@ export default function PostsScreen({ navigation, route }) {
 
                   <View style={styles.commentsInfo}>
                     <TouchableOpacity onPress={() => addLike(item.id)}>
-                      {item.likes.includes(`${userId}`) ? (
-                        <AntDesign name="like1" size={24} color="#fff" />
+                      {item?.likes?.includes(`${userId}`) ? (
+                        <AntDesign name="like1" size={24} color="#fff" /> && (
+                          <AntDesign name="like2" size={24} color="#fff" />
+                        )
                       ) : (
                         <AntDesign name="like2" size={24} color="#fff" />
                       )}
@@ -219,6 +221,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     // alignItems: "center",
     justifyContent: "center",
+    zIndex: 1,
     position: "absolute",
     top: 40,
     left: 16,
@@ -234,7 +237,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   textPost: {
-    color: "#000",
+    color: "#fff",
     fontFamily: "Montserrat-Regular",
     fontSize: 16,
   },

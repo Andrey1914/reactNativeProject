@@ -30,6 +30,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export default function PostsScreen({ navigation, route }) {
+  console.log("route.params", route.params);
   const [posts, setPosts] = useState([]);
   const { email, login, avatar, userId } = useSelector((state) => state.auth);
 

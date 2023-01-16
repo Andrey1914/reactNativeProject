@@ -125,7 +125,7 @@ export default function CreatePostsScreen({ navigation }) {
       const response = await fetch(photoPath);
 
       const file = await response.blob();
-      const storageRef = ref(storage, `posts/${postId}`);
+      const storageRef = ref(storage, `image/${postId}`);
 
       await uploadBytesResumable(storageRef, file);
 

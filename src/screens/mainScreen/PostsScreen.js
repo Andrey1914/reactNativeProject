@@ -78,12 +78,12 @@ export default function PostsScreen({ navigation, route }) {
         source={require("../../../assets/images/mountain.jpg")}
       >
         <View
-        // style={{
-        //   backgroundColor: "#fff",
-        //   marginHorizontal: 16,
-        //   marginTop: 32,
-        //   marginBottom: 70,
-        // }}
+          style={{
+            backgroundColor: "#fff",
+            marginHorizontal: 10,
+            marginTop: 40,
+            marginBottom: 70,
+          }}
         >
           <TouchableOpacity
             style={styles.userBox}
@@ -93,7 +93,7 @@ export default function PostsScreen({ navigation, route }) {
               <Image
                 source={{ uri: avatar }}
                 style={{
-                  height: 60,
+                  height: 30,
                   width: 60,
                   borderRadius: 16,
                 }}
@@ -157,10 +157,11 @@ export default function PostsScreen({ navigation, route }) {
                   <View style={styles.commentsInfo}>
                     <TouchableOpacity onPress={() => addLike(item.id)}>
                       {item?.likes?.includes(`${userId}`) ? (
-                        <AntDesign name="like1" size={24} color="#fff" /> && (
-                          <AntDesign name="like2" size={24} color="#fff" />
-                        )
+                        <AntDesign name="like1" size={24} color="#fff" />
                       ) : (
+                        // <AntDesign name="like1" size={24} color="black" />
+                        // <AntDesign name="like2" size={24} color="#fff" />
+
                         <AntDesign name="like2" size={24} color="#fff" />
                       )}
                     </TouchableOpacity>

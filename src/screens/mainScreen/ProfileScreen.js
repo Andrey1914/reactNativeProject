@@ -93,7 +93,7 @@ export default function RegistrationScreen({ navigation, route }) {
         style={styles.image}
       >
         <ScrollView
-          contentContainerStyle={{ flex: posts.length > 0 ? "none" : 1 }}
+          // contentContainerStyle={{ flex: posts.length > 0 ? "none" : 1 }}
           bounces={false}
         >
           <View style={styles.logout}>
@@ -171,7 +171,7 @@ export default function RegistrationScreen({ navigation, route }) {
 
                     <View style={styles.commentsInfo}>
                       <View>
-                        <AntDesign name="like 1" size={24} color="#fff" />
+                        <AntDesign name="like1" size={24} color="#fff" />
                       </View>
 
                       <Text style={styles.textPost}>

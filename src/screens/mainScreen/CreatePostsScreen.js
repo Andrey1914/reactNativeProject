@@ -24,20 +24,16 @@ import * as Location from "expo-location";
 import * as ImagePicker from "expo-image-picker";
 
 import { MaterialIcons } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 
 export default function CreatePostsScreen({ navigation }) {
   const [isShownKeyboard, setIsShownKeyboard] = useState(false);
 
-  // const [image, setImage] = useState(null);
-  // const [uploading, setUploading] = useState(false);
   const [snap, setSnap] = useState(null);
   const [photoPath, setPhotoPath] = useState("");
   const [photoName, setPhotoName] = useState("");
   const [locationName, setLocationName] = useState("");
   const [loading, setLoading] = useState(false);
-  // const [location, setLocation] = useState(null);
 
   const { userId, login } = useSelector((state) => state.auth);
 
@@ -82,8 +78,6 @@ export default function CreatePostsScreen({ navigation }) {
 
       const photo = await snap.takePictureAsync();
       setPhotoPath(photo.uri);
-      // setImage(snapshot.uri);
-      // console.log(snapshot.uri);
     } catch (error) {
       console.log(error.message);
     }
@@ -99,24 +93,8 @@ export default function CreatePostsScreen({ navigation }) {
 
     if (!result.canceled) {
       setPhotoPath(result.assets);
-      // console.log(result.assets);
     }
   };
-
-  // const pickImage = async () => {
-  //   let result = await ImagePicker.launchImageLibraryAsync({
-  //     mediaTypes: ImagePicker.MediaTypeOptions.All,
-  //     allowsEditing: true,
-  //     aspect: [4, 3],
-  //     quality: 1,
-  //   });
-
-  //   console.log(result);
-
-  //   if (!result.canceled) {
-  //     setImage(result.assets);
-  //   }
-  // };
 
   const uploadPhotoToServer = async () => {
     try {
@@ -145,54 +123,13 @@ export default function CreatePostsScreen({ navigation }) {
     }
   };
 
-  // const uploadImage = async () => {
-  //   const postId = uuid.v4().split("-").join("");
-  //   const blob = await new Promise((resolve, reject) => {
-  //     const xhr = new XMLHttpRequest();
-  //     xhr.onload = function () {
-  //       resolve(xhr.response);
-  //     };
-  //     xhr.onerror = function () {
-  //       reject(new TypeError("Network request failed"));
-  //     };
-  //     xhr.responseType = "blob";
-  //     xhr.open("GET", image, true);
-  //     xhr.send(null);
-  //   });
-  //   const ref = firebase.storage().ref().child(`posts/${postId}`);
-  //   const snapshot = ref.put(blob);
-  //   snapshot.on(
-  //     firebase.storage.TaskEvent.STATE_CHANGED,
-  //     () => {
-  //       setUploading(true);
-  //     },
-  //     (error) => {
-  //       setUploading(false);
-  //       console.log(error);
-  //       blob.close();
-  //       return;
-  //     },
-  //     () => {
-  //       snapshot.snapshot.ref.getDownloadURL().then((url) => {
-  //         setUploading(false);
-  //         console.log("Download URL: ", url);
-  //         setImage(url);
-  //         blob.close();
-  //         return url;
-  //       });
-  //     }
-  //   );
-  // };
-
   const createPost = async () => {
     try {
       const { photo, location } = await uploadPhotoToServer();
-      // const snapshot = await uploadImage();
-      // console.log(photo);
-      // console.log(location);
+
       await addDoc(collection(db, "posts"), {
         photo,
-        // snapshot,
+
         name: photoName,
         locationName,
         location,
@@ -215,19 +152,17 @@ export default function CreatePostsScreen({ navigation }) {
     setLocationName("");
     setPhotoName("");
     setPhotoPath("");
-    // setImage(null);
   };
 
   const onSubmit = async () => {
-    // console.log("navigation", navigation);
     try {
       setLoading(true);
-      // setUploading(true);
+
       await createPost();
       reset();
 
       setLoading(false);
-      // setUploading(false);
+
       navigation.navigate("Posts", { photo, location });
     } catch (error) {
       console.log(error);
@@ -254,11 +189,7 @@ export default function CreatePostsScreen({ navigation }) {
             <View style={styles.addPhotoContainer}>
               <Camera style={styles.addPhotoBox} ref={setSnap}>
                 <TouchableOpacity style={styles.photoIcon} onPress={takePhoto}>
-                  <MaterialIcons
-                    name="photo-camera"
-                    size={24}
-                    color="#121212"
-                  />
+                  <MaterialIcons name="photo-camera" size={24} color="#fff" />
                 </TouchableOpacity>
                 {photoPath && (
                   <Image
@@ -272,18 +203,17 @@ export default function CreatePostsScreen({ navigation }) {
                 activeOpacity={0.8}
                 style={styles.addPhoto}
                 onPress={() => uploadPhoto()}
-                // onPress={() => pickImage()}
               >
                 <Text style={styles.upLoadPhotoText}>Upload photo</Text>
               </TouchableOpacity>
             </View>
 
-            <View style={{ marginTop: 20 }}>
-              <View style={{ marginTop: 20 }}>
+            <View>
+              <View>
                 <TextInput
                   style={styles.input}
-                  placeholder="Name"
-                  placeholderTextColor="#ccc"
+                  placeholder="Name..."
+                  placeholderTextColor="#BDBDBD"
                   onFocus={() => setIsShownKeyboard(true)}
                   onChangeText={setPhotoName}
                   value={photoName}
@@ -292,18 +222,17 @@ export default function CreatePostsScreen({ navigation }) {
 
               <View>
                 <TextInput
-                  style={{ ...styles.input, paddingLeft: 36 }}
-                  placeholder="Location"
-                  placeholderTextColor="#ccc"
+                  style={{ ...styles.input, paddingLeft: 28 }}
+                  placeholder="Location..."
+                  placeholderTextColor="#BDBDBD"
                   onFocus={() => setIsShownKeyboard(true)}
                   onChangeText={setLocationName}
                   value={locationName}
                 ></TextInput>
-
-                <Ionicons
-                  name="location-outline"
+                <Feather
+                  name="map-pin"
                   size={24}
-                  color="#ccc"
+                  color="#BDBDBD"
                   style={styles.locationIcon}
                 />
               </View>
@@ -313,12 +242,11 @@ export default function CreatePostsScreen({ navigation }) {
                   ...styles.button,
                   display: isShownKeyboard ? "none" : "flex",
                   backgroundColor: !(photoPath && photoName && locationName)
-                    ? "#4169e1"
+                    ? "#FF6C00"
                     : "#fff",
                 }}
                 disabled={!(photoPath && photoName && locationName) || loading}
                 onPress={onSubmit}
-                // onPress={uploadImage}
               >
                 <View style={styles.textButton}>
                   {loading ? (
@@ -345,7 +273,7 @@ export default function CreatePostsScreen({ navigation }) {
                     display: isShownKeyboard ? "none" : "flex",
                   }}
                 >
-                  <AntDesign name="delete" size={24} color="#f0f8ff" />
+                  <Feather name="trash-2" size={24} color="#BDBDBD" />
                 </View>
               </TouchableOpacity>
             </View>
@@ -367,22 +295,27 @@ const styles = StyleSheet.create({
   },
   form: {
     marginHorizontal: 16,
+  },
+  addPhotoContainer: {
+    borderRadius: 16,
+    backgroundColor: "ccc",
+    marginBottom: 32,
     marginTop: 32,
   },
   addPhotoBox: {
     position: "relative",
     height: 240,
     borderRadius: 8,
-    backgroundColor: "#515151",
+    backgroundColor: "#F6F6F6",
+    border: "1px solid #E8E8E8",
     justifyContent: "center",
     alignItems: "center",
   },
   photoIcon: {
-    backgroundColor: "#fff",
+    backgroundColor: "rgba(255, 255, 255, 0.3)",
     height: 60,
     width: 60,
     borderRadius: 30,
-    position: "absolute",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -399,26 +332,22 @@ const styles = StyleSheet.create({
     fontFamily: "Montserrat-Regular",
     color: "#ccc",
     fontSize: 16,
-    textAlign: "center",
+    textAlign: "left",
   },
   input: {
     color: "#000",
-    padding: 5,
-    borderRadius: 5,
-    borderColor: "#ccc",
-    borderWidth: 1,
+    borderColor: "#E8E8E8",
+    borderBottomWidth: 1,
     height: 40,
-    paddingLeft: 16,
     marginBottom: 16,
     fontFamily: "Montserrat-Regular",
     fontSize: 16,
   },
   button: {
     height: 40,
-    borderRadius: 5,
+    borderRadius: 20,
     justifyContent: "center",
-    marginHorizontal: 20,
-    marginBottom: 16,
+    marginTop: 16,
   },
   textButton: {
     flex: 1,
@@ -432,20 +361,22 @@ const styles = StyleSheet.create({
   },
   locationIcon: {
     position: "absolute",
-    left: 8,
+    left: 0,
     top: 7,
   },
   deleteButtonBox: {
     alignItems: "center",
   },
   deleteButton: {
+    width: 70,
+    marginLeft: "auto",
+    marginRight: "auto",
+    marginTop: 100,
     justifyContent: "center",
     alignItems: "center",
-    // width: 60,
     height: 40,
-    backgroundColor: "#4169e1",
-    borderRadius: 5,
-    marginHorizontal: 20,
+    backgroundColor: "#F6F6F6",
+    borderRadius: 20,
     marginBottom: 36,
   },
 });

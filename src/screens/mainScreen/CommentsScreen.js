@@ -94,7 +94,7 @@ export default function CommentsScreen({ route }) {
         <View style={{ marginHorizontal: 16, marginTop: 32, flex: 1 }}>
           <Image
             source={{ uri: photo }}
-            style={{ height: 240, borderRadius: 16, marginBottom: 32 }}
+            style={{ height: 240, borderRadius: 8, marginBottom: 32 }}
           ></Image>
 
           <FlatList
@@ -135,7 +135,7 @@ export default function CommentsScreen({ route }) {
               <TextInput
                 style={{ ...styles.input, height: !isShownKeyboard ? 40 : 120 }}
                 placeholder="Add comment..."
-                placeholderTextColor="#fff"
+                placeholderTextColor="#BDBDBD"
                 onFocus={() => setIsShownKeyboard(true)}
                 onChangeText={setComment}
                 value={comment}
@@ -159,8 +159,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "flex-start",
-    backgroundColor: "#121212",
-    // backgroundColor: "#fff",
+    backgroundColor: "#fff",
   },
   text: {
     color: "#FFF",
@@ -173,13 +172,11 @@ const styles = StyleSheet.create({
   },
   input: {
     padding: 10,
-    // backgroundColor: "#515151",
-    backgroundColor: "#ccc",
+    backgroundColor: "#F6F6F6",
     borderWidth: 1,
-    borderColor: "#fff",
-    // borderColor: "#000",
+    borderColor: "#E8E8E8",
     borderRadius: 20,
-    color: "#fff",
+    color: "#212121",
     paddingEnd: 40,
   },
   button: {

@@ -1,10 +1,11 @@
 import React from "react";
-import { useSelector } from "react-redux";
-import { TouchableOpacity, StyleSheet } from "react-native";
+import { useSelector, useDispatch } from "react-redux";
+import { TouchableOpacity, StyleSheet, View } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import { FontAwesome } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 
 import CreatePostsScreen from "./CreatePostsScreen";
 import ProfileScreen from "./ProfileScreen";
@@ -17,15 +18,20 @@ const HomeStack = createBottomTabNavigator();
 export default function HomeScreen({ navigation }) {
   const { path } = useSelector((state) => state.path);
 
+  const dispatch = useDispatch();
+
   return (
     <HomeStack.Navigator
       screenOptions={{
         tabBarShowLabel: false,
-        tabBarStyle: { backgroundColor: "#515151", color: "#fff" },
-        headerStyle: { backgroundColor: "#515151" },
+        tabBarStyle: { backgroundColor: "#fff", color: "#fff" },
+        headerStyle: {
+          backgroundColor: "#fff",
+          boxShadow: "0px 0.5px 0px rgba(0, 0, 0, 0.3)",
+        },
         headerTitleAlign: "center",
         headerTitleStyle: {
-          color: "#fff",
+          color: "#212121",
           fontFamily: "Montserrat-Regular",
           fontSize: 24,
         },
@@ -34,12 +40,20 @@ export default function HomeScreen({ navigation }) {
     >
       <HomeStack.Screen
         options={{
-          headerShown: false,
+          headerShown: true,
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => dispatch(authSignOutUser())}
+              style={{ marginRight: 10 }}
+            >
+              <MaterialIcons name="logout" size={24} color="#BDBDBD" />
+            </TouchableOpacity>
+          ),
           tabBarIcon: ({ focused }) => (
-            <AntDesign
-              name="appstore-o"
+            <Feather
+              name="grid"
               size={24}
-              color={focused ? "#4169e1" : "#fff"}
+              color={focused ? "#FF6C00" : "rgba(33, 33, 33, 0.8)"}
             />
           ),
         }}
@@ -48,21 +62,24 @@ export default function HomeScreen({ navigation }) {
       />
       <HomeStack.Screen
         options={{
-          // headerShown: false,
           tabBarIcon: ({ focused }) => (
-            <FontAwesome
-              name="plus-square-o"
+            <MaterialIcons
+              name="add"
               size={24}
-              color={focused ? "#4169e1" : "#fff"}
+              color={focused ? "#FF6C00" : "rgba(33, 33, 33, 0.8)"}
             />
           ),
-          headerLeft: ({ pressColor }) => (
+          headerLeft: () => (
             <TouchableOpacity
               activeOpacity={0.8}
               style={styles.logOut}
               onPress={() => navigation.navigate("Posts")}
             >
-              <AntDesign name="arrowleft" size={24} color={pressColor} />
+              <AntDesign
+                name="arrowleft"
+                size={24}
+                color="rgba(33, 33, 33, 0.8)"
+              />
             </TouchableOpacity>
           ),
           tabBarStyle: { display: "none" },
@@ -74,10 +91,10 @@ export default function HomeScreen({ navigation }) {
         options={{
           headerShown: false,
           tabBarIcon: ({ focused }) => (
-            <AntDesign
+            <Feather
               name="user"
               size={24}
-              color={focused ? "#4169e1" : "#fff"}
+              color={focused ? "#FF6C00" : "rgba(33, 33, 33, 0.8)"}
             />
           ),
         }}
@@ -94,7 +111,11 @@ export default function HomeScreen({ navigation }) {
                 path ? navigation.navigate(path) : navigation.navigate("Posts");
               }}
             >
-              <AntDesign name="arrowleft" size={24} color="#4169e1" />
+              <AntDesign
+                name="arrowleft"
+                size={24}
+                color="rgba(33, 33, 33, 0.8)"
+              />
             </TouchableOpacity>
           ),
           tabBarButton: () => null,
@@ -114,7 +135,11 @@ export default function HomeScreen({ navigation }) {
                 path ? navigation.navigate(path) : navigation.navigate("Posts");
               }}
             >
-              <AntDesign name="arrowleft" size={24} color="#4169e1" />
+              <AntDesign
+                name="arrowleft"
+                size={24}
+                color="rgba(33, 33, 33, 0.8)"
+              />
             </TouchableOpacity>
           ),
           tabBarButton: () => null,

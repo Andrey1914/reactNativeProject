@@ -71,7 +71,7 @@ export default function CommentsScreen({ route }) {
     }
     try {
       const date = new Date().toLocaleString();
-      await addDoc(collection(db, "posts", `${id}`, "commets"), {
+      await addDoc(collection(db, "posts", `${id}`, "comments"), {
         comment,
         login,
         userId,

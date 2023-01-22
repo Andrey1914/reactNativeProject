@@ -39,7 +39,7 @@ export default function RegistrationScreen({ navigation }) {
       const file = await response.blob();
       const storageRef = ref(storage, `avatars/${avatarId}`);
       await uploadBytes(storageRef, file);
-      const path = await getDownloadURL(ref(storage, `avatar/${avatarId}`));
+      const path = await getDownloadURL(ref(storage, `avatars/${avatarId}`));
       setAvatar(path);
     } catch (error) {
       console.log(error);

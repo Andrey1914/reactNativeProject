@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
 import * as ImagePicker from "expo-image-picker";
 
-import { storage } from "../../firebase/config";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+// import { storage } from "../../firebase/config";
+// import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 import { useDispatch } from "react-redux";
-import { authSlice } from "../../redux/authReducer";
-import { authSignUpUser, updateAvatar } from "../../redux/authOperations";
-
+// import { authSlice } from "../../redux/authReducer";
+// import { authSignUpUser, updateAvatar } from "../../redux/authOperations";
+import { authSignUpUser } from "../../redux/authOperations";
 import {
   StyleSheet,
   Image,
@@ -15,89 +16,157 @@ import {
   View,
   TextInput,
   TouchableOpacity,
-  Platform,
+  // Platform,
   KeyboardAvoidingView,
   Keyboard,
   TouchableWithoutFeedback,
   ImageBackground,
+  Alert,
 } from "react-native";
-import Svg, { Circle, Path } from "react-native-svg";
+
+import { AntDesign, Ionicons } from "@expo/vector-icons";
+
+const initialState = {
+  name: "",
+  email: "",
+  password: "",
+  avatar: "",
+};
 
 export default function RegistrationScreen({ navigation }) {
-  const [email, setEmail] = useState("");
-  const [login, setLogin] = useState("");
-  const [password, setPassword] = useState("");
+  const [state, setState] = useState(initialState);
+  // const [email, setEmail] = useState("");
+  // const [login, setLogin] = useState("");
+  // const [password, setPassword] = useState("");
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [isSecureTextEntry, IsSecureTextEntry] = useState(true);
-  const [avatar, setAvatar] = useState(null);
+  const [avatarUpload, setAvatarUpload] = useState("");
 
   const dispatch = useDispatch();
 
-  const uploadPhotoToServer = async (avatarId) => {
-    try {
-      const response = await fetch(avatar);
-      const file = await response.blob();
-      const storageRef = ref(storage, `avatars/${avatarId}`);
-      await uploadBytes(storageRef, file);
-      const path = await getDownloadURL(ref(storage, `avatars/${avatarId}`));
-      setAvatar(path);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      () => {
+        setIsShowKeyboard(true);
+      }
+    );
+
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => {
+        setIsShowKeyboard(false);
+      }
+    );
+
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  }, []);
 
   const keyboardHide = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
+    setState(initialState);
   };
 
-  const onSubmit = async () => {
-    try {
-      const updatedUser = await authSignUpUser({
-        email,
-        login,
-        password,
-      });
-      await uploadPhotoToServer(updatedUser.uid);
-      dispatch(updateAvatar(avatar));
-      dispatch(
-        authSlice.actions.updateProfile({
-          userId: updatedUser,
-          login: updatedUser.displayName,
-          email: updatedUser.email,
-        })
-      );
-      keyboardHide();
-      setEmail("");
-      setPassword("");
-      setLogin("");
-    } catch {
-      console.log(error);
-    }
-  };
-
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+  // upload avatar from gallery
+  const pickAvatar = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
+
+      quality: 0,
     });
 
     if (!result.canceled) {
-      setAvatar(result.assets);
+      // setAvatar(result.assets);
+      setAvatarUpload(result.assets[0].uri);
     }
   };
 
-  useEffect(() => {
-    const hideKeyboard = Keyboard.addListener("keyboardDidHide", () => {
-      setIsShowKeyboard(false);
-    });
+  // delete avatar
+  const deleteAvatar = () => {
+    setAvatarUpload(null);
+  };
 
-    return () => {
-      hideKeyboard.remove();
-    };
-  }, []);
+  // upload avatar to firebase
+  const uploadAvatarToServer = async () => {
+    const storage = getStorage();
+    const uniqueAvatarId = Date.now().toString();
+    const storageRef = ref(storage, `avatars/${uniqueAvatarId}`);
+
+    const response = await fetch(avatarUpload);
+    const file = await response.blob();
+
+    await uploadBytes(storageRef, file).then(() => {});
+
+    const processedPhoto = await getDownloadURL(
+      ref(storage, `avatars/${uniqueAvatarId}`)
+    )
+      .then((url) => {
+        return url;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    return processedPhoto;
+  };
+
+  // sending the registration form to firebase
+
+  const onSubmit = async () => {
+    try {
+      const avatarRef = await uploadAvatarToServer();
+      setState((prevState) => ({ ...prevState, avatar: avatarRef }));
+      const newState = {
+        avatar: avatarRef,
+        name: state.name,
+        email: state.email,
+        password: state.password,
+      };
+
+      dispatch(authSignUpUser(newState));
+      keyboardHide();
+      // const updatedUser = await authSignUpUser({
+      //   email,
+      //   login,
+      //   password,
+      // });
+      // await uploadPhotoToServer(updatedUser.uid);
+      // dispatch(updateAvatar(avatar));
+      // dispatch(
+      //   authSlice.actions.updateProfile({
+      //     userId: updatedUser,
+      //     login: updatedUser.displayName,
+      //     email: updatedUser.email,
+      //   })
+      // );
+      // keyboardHide();
+      // setEmail("");
+      // setPassword("");
+      // setLogin("");
+    } catch (error) {
+      // console.log(error);
+      Alert.alert("Choose your avatar");
+    }
+  };
+
+  const handleInput = (type, value) => {
+    setState((prevState) => ({ ...prevState, [type]: value }));
+  };
+
+  // useEffect(() => {
+  //   const hideKeyboard = Keyboard.addListener("keyboardDidHide", () => {
+  //     setIsShowKeyboard(false);
+  //   });
+
+  //   return () => {
+  //     hideKeyboard.remove();
+  //   };
+  // }, []);
 
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
@@ -106,47 +175,61 @@ export default function RegistrationScreen({ navigation }) {
           style={styles.image}
           source={require("../../../assets/images/mountain.jpg")}
         >
-          <KeyboardAvoidingView
-            behavior={Platform.OS == "ios" ? "padding" : "height"}
+          <View
+            style={{
+              ...styles.form,
+              paddingBottom: isShowKeyboard ? 30 : 45,
+            }}
           >
-            <View
+            <KeyboardAvoidingView
+              behavior={Platform.OS == "ios" ? "padding" : "height"}
+            >
+              {/* <View
               style={{
                 ...styles.formBackdrop,
                 paddingHorizontal: 40,
               }}
-            >
+            > */}
               <View style={styles.centerBox}>
                 <View style={styles.avatarBox}>
-                  <Image
-                    style={{ height: "100%", width: "100%", borderRadius: 16 }}
-                    source={{ uri: avatar }}
-                  ></Image>
-                  <TouchableOpacity
-                    style={styles.addIconBox}
-                    onPress={pickImage}
-                  >
-                    <Svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="25"
-                      height="25"
-                      fill="none"
-                      viewBox="0 0 25 25"
+                  <View style={{ overflow: "hidden", borderRadius: 16 }}>
+                    <ImageBackground
+                      style={styles.avatar}
+                      source={require("../../../assets/images/drops-pink.jpg")}
                     >
-                      <Circle
-                        cx="12.5"
-                        cy="12.5"
-                        r="12"
-                        fill="none"
-                        stroke="#FF6C00"
-                      ></Circle>
-                      <Path
-                        fill="#FF6C00"
-                        fillRule="evenodd"
-                        d="M13 6h-1v6H6v1h6v6h1v-6h6v-1h-6V6z"
-                        clipRule="evenodd"
-                      ></Path>
-                    </Svg>
-                  </TouchableOpacity>
+                      {avatarUpload && (
+                        <Image
+                          style={styles.avatar}
+                          source={{ uri: avatarUpload }}
+                        />
+                      )}
+                    </ImageBackground>
+                  </View>
+                  {/* // ></Image> */}
+                  {avatarUpload ? (
+                    <TouchableOpacity
+                      style={{ ...styles.avatarBtn, borderColor: "#BDBDBD" }}
+                      onPress={deleteAvatar}
+                    >
+                      {/* <MaterialIcons name="close" size={26} color="#BDBDBD" /> */}
+                      <AntDesign
+                        name="closecircleo"
+                        size={26}
+                        color="#BDBDBD"
+                      />
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity
+                      style={styles.addIconBox}
+                      onPress={pickAvatar}
+                    >
+                      <Ionicons
+                        name="add-circle-outline"
+                        size={26}
+                        color="#FF6C00"
+                      />
+                    </TouchableOpacity>
+                  )}
                 </View>
               </View>
 
@@ -160,7 +243,8 @@ export default function RegistrationScreen({ navigation }) {
               >
                 <View style={styles.header}>
                   <Text style={styles.headerTitle}>
-                    Hello! Sign up, please.
+                    {/* Hello! Sign up, please. */}
+                    Registration.
                   </Text>
                 </View>
               </View>
@@ -170,8 +254,8 @@ export default function RegistrationScreen({ navigation }) {
                   style={styles.input}
                   textAlign={"center"}
                   onFocus={() => setIsShowKeyboard(true)}
-                  value={login}
-                  onChangeText={setLogin}
+                  // value={login}
+                  onChangeText={(value) => handleInput("name", value)}
                   placeholder="Login"
                   placeholderTextColor="#ccc"
                 />
@@ -182,8 +266,8 @@ export default function RegistrationScreen({ navigation }) {
                   style={styles.input}
                   textAlign={"center"}
                   onFocus={() => setIsShowKeyboard(true)}
-                  value={email}
-                  onChangeText={setEmail}
+                  // value={email}
+                  onChangeText={(value) => handleInput("email", value)}
                   placeholder="Email"
                   placeholderTextColor="#ccc"
                   keyboardType="email-address"
@@ -196,8 +280,8 @@ export default function RegistrationScreen({ navigation }) {
                   textAlign={"center"}
                   secureTextEntry={isSecureTextEntry}
                   onFocus={() => setIsShowKeyboard(true)}
-                  value={password}
-                  onChangeText={setPassword}
+                  // value={password}
+                  onChangeText={(value) => handleInput("password", value)}
                   placeholder="Password"
                   placeholderTextColor="#ccc"
                 />
@@ -230,8 +314,9 @@ export default function RegistrationScreen({ navigation }) {
               >
                 <Text style={styles.btnTransTitle}>Sign in</Text>
               </TouchableOpacity>
-            </View>
-          </KeyboardAvoidingView>
+              {/* </View> */}
+            </KeyboardAvoidingView>
+          </View>
         </ImageBackground>
       </View>
     </TouchableWithoutFeedback>
@@ -249,8 +334,14 @@ const styles = StyleSheet.create({
   },
   form: { marginHorizontal: 16 },
   formBackdrop: {
-    backgroundColor: "transparent",
-    justifyContent: "flex-end",
+    // backgroundColor: "transparent",
+    // justifyContent: "flex-end",
+    backgroundColor: "#FFFFFF",
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
+    paddingTop: 32,
+    paddingLeft: 16,
+    paddingRight: 16,
   },
   input: {
     borderWidth: 1,
@@ -299,19 +390,38 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#ccc",
   },
+  avatar: {
+    width: 120,
+    height: 120,
+    resizeMode: "cover",
+  },
   avatarBox: {
     height: 120,
     width: 120,
+
     borderRadius: 16,
     backgroundColor: "transparent",
     borderColor: "#ccc",
     borderWidth: 1,
   },
+  avatarBtn: {
+    position: "absolute",
+    bottom: 20,
+    right: -15,
+    justifyContent: "center",
+    alignItems: "center",
+    width: 30,
+    height: 30,
+    backgroundColor: "#fff",
+    borderWidth: 2,
+    borderColor: "#FF6C00",
+    borderRadius: 50,
+  },
   centerBox: {
     position: "absolute",
     left: 0,
     right: 0,
-    top: -60,
+    top: -30,
     alignItems: "center",
   },
   btnTrans: {
@@ -346,7 +456,6 @@ const styles = StyleSheet.create({
   enterAccountText: {
     color: "#fff",
     fontFamily: "Montserrat-Regular",
-    // fontFamily: "DMMono-Medium",
     textAlign: "center",
   },
 });

@@ -5,51 +5,79 @@ import {
   View,
   TextInput,
   TouchableOpacity,
-  Platform,
+  // Platform,
   KeyboardAvoidingView,
   Keyboard,
   TouchableWithoutFeedback,
   ImageBackground,
 } from "react-native";
+
 import { authSignInUser } from "../../redux/authOperations";
 import { useDispatch } from "react-redux";
 
+const initialState = {
+  email: "",
+  password: "",
+};
+
 export default function LoginScreen({ navigation }) {
-  const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
+  // const [password, setPassword] = useState("");
+  // const [email, setEmail] = useState("");
+  const [state, setState] = useState(initialState);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [isSecureTextEntry, IsSecureTextEntry] = useState(true);
 
   const dispatch = useDispatch();
 
-  const keyboardHide = () => {
-    setIsShowKeyboard(false);
-    Keyboard.dismiss();
-  };
-
-  const onSubmit = async () => {
-    keyboardHide();
-    dispatch(authSignInUser({ email, password }));
-    setEmail("");
-    setPassword("");
-  };
-
   useEffect(() => {
-    const hideKeyboard = Keyboard.addListener("keyboardDidHide", () => {
-      setIsShowKeyboard(false);
-    });
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      () => {
+        setIsShowKeyboard(true);
+      }
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => {
+        setIsShowKeyboard(false);
+      }
+    );
 
     return () => {
-      hideKeyboard.remove();
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
     };
   }, []);
 
+  const keyboardHide = () => {
+    setIsShowKeyboard(false);
+    Keyboard.dismiss();
+    setState(initialState);
+  };
+
+  const onSubmit = () => {
+    keyboardHide();
+    dispatch(authSignInUser(state));
+    // setEmail("");
+    // setPassword("");
+  };
+
+  const handleInput = (type, value) => {
+    setState((prevState) => ({ ...prevState, [type]: value }));
+  };
+
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
-      <View style={styles.container}>
-        <ImageBackground
-          style={styles.image}
-          source={require("../../../assets/images/mountain.jpg")}
+      {/* <View style={styles.container}> */}
+      <ImageBackground
+        style={styles.image}
+        source={require("../../../assets/images/mountain.jpg")}
+      >
+        <View
+          style={{
+            ...styles.form,
+            paddingBottom: isShowKeyboard ? 30 : 110,
+          }}
         >
           <KeyboardAvoidingView
             behavior={Platform.OS == "ios" ? "padding" : "height"}
@@ -68,10 +96,10 @@ export default function LoginScreen({ navigation }) {
                   <Text style={styles.inputTitle}>Email address</Text>
                   <TextInput
                     style={styles.input}
-                    value={email}
+                    value={state.email}
                     textAlign={"center"}
                     onFocus={() => setIsShowKeyboard(true)}
-                    onChangeText={setEmail}
+                    onChangeText={(value) => handleInput("email", value)}
                     placeholder="Email"
                     placeholderTextColor="#ccc"
                     keyboardType="email-address"
@@ -84,8 +112,8 @@ export default function LoginScreen({ navigation }) {
                     textAlign={"center"}
                     secureTextEntry={isSecureTextEntry}
                     onFocus={() => setIsShowKeyboard(true)}
-                    value={password}
-                    onChangeText={setPassword}
+                    value={state.password}
+                    onChangeText={(value) => handleInput("password", value)}
                     placeholder="Password"
                     placeholderTextColor="#ccc"
                   />
@@ -119,8 +147,9 @@ export default function LoginScreen({ navigation }) {
               </View>
             </View>
           </KeyboardAvoidingView>
-        </ImageBackground>
-      </View>
+        </View>
+      </ImageBackground>
+      {/* </View> */}
     </TouchableWithoutFeedback>
   );
 }
@@ -138,8 +167,16 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
   },
   formBackdrop: {
-    backgroundColor: "transparent",
-    justifyContent: "flex-end",
+    // backgroundColor: "transparent",
+    // justifyContent: "flex-end",
+    position: "relative",
+    paddingBottom: 78,
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
+    paddingTop: 32,
+    paddingLeft: 16,
+    paddingRight: 16,
+    backgroundColor: "#FFFFFF",
   },
   input: {
     borderWidth: 1,

@@ -1,10 +1,31 @@
-import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getStorage } from "firebase/storage";
+import { getApp, getApps, initializeApp } from "firebase/app";
+import { getAuth, initializeAuth } from "firebase/auth";
+import { getReactNativePersistence } from "firebase/auth/react-native";
+// import { getStorage } from "firebase/storage";
 import { getFirestore } from "firebase/firestore";
-import firebase from "firebase/compat/app";
-import "firebase/storage";
-import "firebase/firestore";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+// import firebase from "firebase/compat/app";
+// import "firebase/storage";
+// import "firebase/firestore";
+// import {
+//   API_KEY,
+//   AUTH_DOMAIN,
+//   PROJECT_ID,
+//   STORAGE_BUCKET,
+//   MESSAGING_SENDER_ID,
+//   APP_ID,
+//   MEASUREMENT_ID,
+// } from "@env";
+
+// const firebaseConfig = {
+//   apiKey: API_KEY,
+//   authDomain: AUTH_DOMAIN,
+//   projectId: PROJECT_ID,
+//   storageBucket: STORAGE_BUCKET,
+//   messagingSenderId: MESSAGING_SENDER_ID,
+//   appId: APP_ID,
+//   measurementId: MEASUREMENT_ID,
+// };
 
 const firebaseConfig = {
   apiKey: "AIzaSyBy4ht3ot7ZxrfYeHqLLVjpx_R3ZyyebFQ",
@@ -16,13 +37,23 @@ const firebaseConfig = {
   measurementId: "G-L8GPPXBGEY",
 };
 
-if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
+let app;
+let auth;
+if (getApps().length < 1) {
+  app = initializeApp(firebaseConfig);
+  auth = initializeAuth(app, {
+    persistence: getReactNativePersistence(AsyncStorage),
+  });
+} else {
+  app = getApp();
+  auth = getAuth();
 }
 
-const app = initializeApp(firebaseConfig);
-
-export { app, firebase };
-export const auth = getAuth(app);
-export const storage = getStorage(app);
+export { app, auth };
 export const db = getFirestore(app);
+
+// const app = initializeApp(firebaseConfig);
+
+// export { app, firebase };
+// export const auth = getAuth(app);
+// export const storage = getStorage(app);

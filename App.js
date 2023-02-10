@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
-import { NavigationContainer } from "@react-navigation/native";
+// import { NavigationContainer } from "@react-navigation/native";
 import { Provider } from "react-redux";
 import { store } from "./src/redux/store";
 import * as Font from "expo-font";
+import Main from "./src/components/Main";
+import "./src/firebase/config";
 
-import AuthScreen from "./src/screens/AuthScreen/AuthScreen";
+// import AuthScreen from "./src/screens/AuthScreen/AuthScreen";
 
 // import * as SplashScreen from "expo-splash-screen";
 
@@ -35,9 +37,10 @@ export default function App() {
     <>
       {isReady && (
         <Provider store={store}>
-          <NavigationContainer>
+          <Main />
+          {/* <NavigationContainer>
             <AuthScreen />
-          </NavigationContainer>
+          </NavigationContainer> */}
         </Provider>
       )}
     </>

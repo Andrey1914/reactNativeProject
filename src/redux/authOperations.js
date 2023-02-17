@@ -1,16 +1,13 @@
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  signOut,
   updateProfile,
   onAuthStateChanged,
+  signOut,
 } from "firebase/auth";
-
 import { Alert } from "react-native";
-
 import { auth } from "../firebase/config";
 import { authSlice } from "./authReducer";
-
 const { updateUserProfile, authStateChange, authSignOut } = authSlice.actions;
 
 export const authSignUpUser =
@@ -34,9 +31,6 @@ export const authSignUpUser =
         })
       );
       Alert.alert(`Welcome to cabinet`);
-
-      // const updatedUser = auth.currentUser;
-      // return updatedUser;
     } catch (error) {
       Alert.alert(error.message);
       console.log("error.message", error.message);
@@ -48,6 +42,7 @@ export const authSignInUser =
   async () => {
     try {
       const user = await signInWithEmailAndPassword(auth, email, password);
+      //   console.log("userLogin", user);
       Alert.alert(`Welcome to cabinet`);
     } catch (error) {
       Alert.alert(error.message);
@@ -58,19 +53,16 @@ export const authSignInUser =
 export const authSignOutUser = () => async (dispatch) => {
   try {
     await signOut(auth);
-    // dispatch(authSlice.actions.authLogout());
     dispatch(authSignOut());
     Alert.alert(`Sign-out successful`);
   } catch (error) {
     Alert.alert(error.message);
-    console.log("error.message", error.message);
+    console.log("error", error.message);
   }
 };
 
 export const authStateChangeUser = () => async (dispatch) => {
   onAuthStateChanged(auth, (user) => {
-    // try {
-    // await onAuthStateChanged(auth, (user) => {
     if (user) {
       const { uid, displayName, email, photoURL } = user;
       dispatch(
@@ -84,24 +76,4 @@ export const authStateChangeUser = () => async (dispatch) => {
       dispatch(authStateChange({ stateChange: true }));
     }
   });
-  // } catch (error) {
-  //   console.log(error.message);
-  // }
-  // })
 };
-
-// export const updateAvatar = (newAvatar) => async (dispatch, getState) => {
-//   try {
-//     await updateProfile(auth.currentUser, {
-//       photoURL: newAvatar,
-//     });
-//     const updatedUser = auth.currentUser;
-//     dispatch(
-//       authSlice.actions.updateAvatarAction({
-//         avatar: updatedUser.photoURL,
-//       })
-//     );
-//   } catch (error) {
-//     console.log(error.message);
-//   }
-// };

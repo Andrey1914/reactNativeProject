@@ -15,8 +15,8 @@ export const authSlice = createSlice({
     updateUserProfile: (state, { payload }) => ({
       ...state,
       userId: payload.userId,
-      name: payload.name,
       email: payload.email,
+      name: payload.name,
       avatar: payload.avatar,
     }),
     authStateChange: (state, { payload }) => ({
@@ -24,10 +24,5 @@ export const authSlice = createSlice({
       stateChange: payload.stateChange,
     }),
     authSignOut: () => state,
-    // authLogout: () => initialState,
-    // updateAvatarAction: (state, { payload }) => ({
-    //   ...state,
-    //   avatar: payload.avatar,
-    // }),
   },
 });

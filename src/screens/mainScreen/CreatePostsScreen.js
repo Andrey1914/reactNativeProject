@@ -24,7 +24,7 @@ import * as MediaLibrary from "expo-media-library";
 import * as Location from "expo-location";
 import * as ImagePicker from "expo-image-picker";
 
-// import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 // import { Feather } from "@expo/vector-icons";
 import { Octicons, Feather } from "@expo/vector-icons";
 
@@ -36,13 +36,13 @@ const initialPostData = {
 
 export default function CreatePostsScreen({ navigation }) {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
-  const [postData, setPostData] = useState(null);
-  // const [snap, setSnap] = useState(null);
-  const [camera, setCamera] = useState(null);
+  const [postData, setPostData] = useState(initialPostData);
+  const [snap, setSnap] = useState(null);
+  // const [camera, setCamera] = useState(null);
   const [city, setCity] = useState("");
   const [location, setLocation] = useState(null);
   const [type, setType] = useState(CameraType.back);
-  // const [photoPath, setPhotoPath] = useState("");
+  const [photoPath, setPhotoPath] = useState("");
   // const [photoName, setPhotoName] = useState("");
   // const [locationName, setLocationName] = useState("");
   // const [loading, setLoading] = useState(false);
@@ -105,25 +105,23 @@ export default function CreatePostsScreen({ navigation }) {
   }, []);
 
   const takePhoto = async () => {
-    // if (!snap) {
-    //   console.log("error");
-    //   return;
-    // }
-    // try {
-    //   const { status } = await Camera.getCameraPermissionsAsync();
-
-    //   if (status !== "granted") {
-    //     console.log("Permission to access camera was denied");
-    //     return;
-    //   }
-
-    const photo = await camera.takePictureAsync();
-    await MediaLibrary.createAssetAsync(photo.uri);
-    setImageToPostData(photo);
-    // setPhotoPath(photo.uri);
-    // } catch (error) {
-    //   console.log(error.message);
-    // }
+    if (!snap) {
+      console.log("error");
+      return;
+    }
+    try {
+      const { status } = await Camera.getCameraPermissionsAsync();
+      if (status !== "granted") {
+        console.log("Permission to access camera was denied");
+        return;
+      }
+      const photo = await snap.takePictureAsync();
+      // await MediaLibrary.createAssetAsync(photo.uri);
+      setImageToPostData(photo);
+      setPhotoPath(photo.uri);
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   // upload photo from gallery
@@ -137,7 +135,7 @@ export default function CreatePostsScreen({ navigation }) {
     });
 
     if (!result.canceled) {
-      // setPhotoPath(result.assets);
+      setPhotoPath(result.assets);
       setImageToPostData(result.assets[0].uri);
     }
   };
@@ -174,54 +172,54 @@ export default function CreatePostsScreen({ navigation }) {
     setPostData((prevState) => ({ ...prevState, [type]: value }));
   };
 
-  // const uploadPhotoToServer = async () => {
-  //   try {
-  //     const postId = uuid.v4().split("-").join("");
-
-  //     const response = await fetch(photoPath);
-
-  //     const file = await response.blob();
-  //     const storageRef = ref(storage, `image/${postId}`);
-
-  //     await uploadBytesResumable(storageRef, file);
-
-  //     const photo = await getDownloadURL(storageRef);
-
-  //     let { status } = await Location.requestForegroundPermissionsAsync();
-  //     if (status !== "granted") {
-  //       console.log("Permission to access location was denied");
-  //       return;
-  //     }
-
-  //     const location = await Location.getCurrentPositionAsync();
-
-  //     return { photo, location };
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
   const uploadPhotoToServer = async () => {
-    const storage = getStorage();
-    const uniquePostId = Date.now().toString();
-    const storageRef = ref(storage, `images/${uniquePostId}`);
+    try {
+      const uniquePostId = uuid.v4().split("-").join("");
 
-    const response = await fetch(postData.photo);
-    const file = await response.blob();
+      const response = await fetch(photoPath);
 
-    await uploadBytes(storageRef, file).then(() => {
-      console.log(`photo is uploaded`);
-    });
-    const processedPhoto = await getDownloadURL(
-      ref(storage, `images/${uniquePostId}`)
-    )
-      .then((url) => {
-        return url;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    return processedPhoto;
+      const file = await response.blob();
+      const storageRef = ref(storage, `image/${uniquePostId}`);
+
+      await uploadBytesResumable(storageRef, file);
+
+      const photo = await getDownloadURL(storageRef);
+
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        console.log("Permission to access location was denied");
+        return;
+      }
+
+      const location = await Location.getCurrentPositionAsync();
+
+      return { photo, location };
+    } catch (error) {
+      console.log(error);
+    }
   };
+  // const uploadPhotoToServer = async () => {
+  //   const storage = getStorage();
+  //   const uniquePostId = Date.now().toString();
+  //   const storageRef = ref(storage, `images/${uniquePostId}`);
+
+  //   const response = await fetch(postData.photo);
+  //   const file = await response.blob();
+
+  //   await uploadBytes(storageRef, file).then(() => {
+  //     console.log(`photo is uploaded`);
+  //   });
+  //   const processedPhoto = await getDownloadURL(
+  //     ref(storage, `images/${uniquePostId}`)
+  //   )
+  //     .then((url) => {
+  //       return url;
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  //   return processedPhoto;
+  // };
 
   // const createPost = async () => {
   //   try {
@@ -245,7 +243,8 @@ export default function CreatePostsScreen({ navigation }) {
   const uploadPostToServer = async () => {
     const photo = await uploadPhotoToServer();
     try {
-      const setUserPost = await addDoc(collection(db, "posts"), {
+      // const setUserPost = await addDoc(collection(db, "posts"), {
+      await addDoc(collection(db, "posts"), {
         photo,
         description: postData.description,
         place: postData.place,
@@ -311,7 +310,8 @@ export default function CreatePostsScreen({ navigation }) {
               style={styles.camera}
               type={type}
               flashMode="auto"
-              ref={(ref) => setCamera(ref)}
+              // ref={(ref) => setCamera(ref)}
+              ref={setSnap}
             >
               <TouchableOpacity
                 style={styles.cameraTypeBtn}
@@ -323,7 +323,8 @@ export default function CreatePostsScreen({ navigation }) {
                 style={styles.cameraSnapBtn}
                 onPress={takePhoto}
               >
-                <Octicons name="issue-opened" size={50} color="#F6F6F6" />
+                <MaterialIcons name="photo-camera" size={24} color="#fff" />
+                {/* <Octicons name="issue-opened" size={50} color="#F6F6F6" /> */}
               </TouchableOpacity>
             </Camera>
           )}
@@ -404,7 +405,8 @@ const styles = StyleSheet.create({
     marginTop: 32,
     marginHorizontal: 16,
     borderRadius: 8,
-    justifyContent: "flex-end",
+    // justifyContent: "flex-end",
+    justifyContent: "center",
     alignItems: "center",
     paddingBottom: 35,
   },
@@ -415,8 +417,14 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   cameraSnapBtn: {
-    marginBottom: 20,
-    opacity: 0.7,
+    backgroundColor: "rgba(255, 255, 255, 0.3)",
+    height: 60,
+    width: 60,
+    borderRadius: 30,
+    justifyContent: "center",
+    alignItems: "center",
+    // marginBottom: 20,
+    // opacity: 0.7,
   },
   photoContainer: {
     position: "relative",

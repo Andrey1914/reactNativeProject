@@ -1,19 +1,18 @@
 import { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  TouchableOpacity,
-  // Platform,
-  KeyboardAvoidingView,
-  Keyboard,
-  TouchableWithoutFeedback,
-  ImageBackground,
-} from "react-native";
-
-import { authSignInUser } from "../../redux/authOperations";
 import { useDispatch } from "react-redux";
+
+import Input from "../../components/Input";
+import { authSignInUser } from "../../redux/authOperations";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  Keyboard,
+  ImageBackground,
+  KeyboardAvoidingView,
+} from "react-native";
 
 const initialState = {
   email: "",
@@ -21,11 +20,8 @@ const initialState = {
 };
 
 export default function LoginScreen({ navigation }) {
-  // const [password, setPassword] = useState("");
-  // const [email, setEmail] = useState("");
   const [state, setState] = useState(initialState);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
-  const [isSecureTextEntry, IsSecureTextEntry] = useState(true);
 
   const dispatch = useDispatch();
 
@@ -55,11 +51,9 @@ export default function LoginScreen({ navigation }) {
     setState(initialState);
   };
 
-  const onSubmit = () => {
+  const submitForm = () => {
     keyboardHide();
     dispatch(authSignInUser(state));
-    // setEmail("");
-    // setPassword("");
   };
 
   const handleInput = (type, value) => {
@@ -68,10 +62,9 @@ export default function LoginScreen({ navigation }) {
 
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
-      {/* <View style={styles.container}> */}
       <ImageBackground
+        source={require("../../../assets/images/bg-mountain.jpg")}
         style={styles.image}
-        source={require("../../../assets/images/mountain.jpg")}
       >
         <View
           style={{
@@ -82,93 +75,61 @@ export default function LoginScreen({ navigation }) {
           <KeyboardAvoidingView
             behavior={Platform.OS == "ios" ? "padding" : "height"}
           >
-            <View
-              style={{
-                ...styles.formBackdrop,
-                paddingHorizontal: 40,
-              }}
-            >
-              <View style={styles.form}>
-                <View style={styles.header}>
-                  <Text style={styles.headerTitle}>Log in</Text>
-                </View>
-                <View style={{ marginTop: 20 }}>
-                  <Text style={styles.inputTitle}>Email address</Text>
-                  <TextInput
-                    style={styles.input}
-                    value={state.email}
-                    textAlign={"center"}
-                    onFocus={() => setIsShowKeyboard(true)}
-                    onChangeText={(value) => handleInput("email", value)}
-                    placeholder="Email"
-                    placeholderTextColor="#ccc"
-                    keyboardType="email-address"
-                  />
-                </View>
-                <View style={{ marginTop: 20 }}>
-                  <Text style={styles.inputTitle}>Password</Text>
-                  <TextInput
-                    style={styles.input}
-                    textAlign={"center"}
-                    secureTextEntry={isSecureTextEntry}
-                    onFocus={() => setIsShowKeyboard(true)}
-                    value={state.password}
-                    onChangeText={(value) => handleInput("password", value)}
-                    placeholder="Password"
-                    placeholderTextColor="#ccc"
-                  />
-                  <View style={styles.showPasswordBox}>
-                    <Text
-                      style={styles.text}
-                      onPress={() => {
-                        IsSecureTextEntry(!isSecureTextEntry);
-                      }}
-                    >
-                      {isSecureTextEntry ? "Show password" : "Hide password"}
-                    </Text>
-                  </View>
-                </View>
+            <Text style={styles.pageTitle}>Login</Text>
+            <Input
+              onFocus={() => setIsShowKeyboard(true)}
+              value={state.email}
+              onChangeText={(value) => handleInput("email", value)}
+              placeholder="Email address"
+            />
+            <Input
+              onFocus={() => setIsShowKeyboard(true)}
+              value={state.password}
+              onChangeText={(value) => handleInput("password", value)}
+              placeholder="Password"
+              password
+            />
+            {!isShowKeyboard && (
+              <>
                 <TouchableOpacity
-                  activeOpacity={0.8}
-                  style={styles.btn}
-                  onPress={onSubmit}
+                  activeOpacity={0.7}
+                  style={styles.formBtn}
+                  onPress={submitForm}
                 >
-                  <Text style={styles.btnTitle}>Sign in</Text>
+                  <Text style={styles.formBtnText}>Log In</Text>
                 </TouchableOpacity>
-                <View style={styles.loginView}>
-                  <Text style={styles.loginText}>No account?</Text>
+                <View style={styles.authFooter}>
+                  <Text style={styles.switchText}>Don't have an account? </Text>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("Registration")}
+                  >
+                    <Text style={styles.switchLink}> Sign Up</Text>
+                  </TouchableOpacity>
                 </View>
-                <TouchableOpacity
-                  onPress={() => navigation.navigate("Registration")}
-                  style={styles.btnTrans}
-                >
-                  <Text style={styles.btnTransTitle}>Sign up</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
+              </>
+            )}
           </KeyboardAvoidingView>
         </View>
       </ImageBackground>
-      {/* </View> */}
     </TouchableWithoutFeedback>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   image: {
     flex: 1,
     resizeMode: "cover",
-    justifyContent: "center",
+    justifyContent: "flex-end",
+  },
+  pageTitle: {
+    fontFamily: "Montserrat-Regular",
+    fontSize: 30,
+    lineHeight: 35,
+    marginBottom: 32,
+    textAlign: "center",
+    color: "#212121",
   },
   form: {
-    marginHorizontal: 16,
-  },
-  formBackdrop: {
-    // backgroundColor: "transparent",
-    // justifyContent: "flex-end",
     position: "relative",
     paddingBottom: 78,
     borderTopLeftRadius: 25,
@@ -178,74 +139,36 @@ const styles = StyleSheet.create({
     paddingRight: 16,
     backgroundColor: "#FFFFFF",
   },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    height: 40,
-    borderRadius: 8,
-    color: "#ccc",
-  },
-  inputTitle: {
-    fontFamily: "Montserrat-Regular",
-    color: "#ccc",
-    fontSize: 16,
-    marginBottom: 8,
-  },
-  btn: {
-    borderRadius: 6,
-    borderWidth: 1,
-    height: 40,
-    marginTop: 40,
-    justifyContent: "center",
-    marginHorizontal: 20,
+  formBtn: {
+    marginTop: 27,
+    marginBottom: 16,
     alignItems: "center",
-    ...Platform.select({
-      ios: {
-        backgroundColor: "transparent",
-        borderColor: "#f0f8ff",
-      },
-      android: {
-        backgroundColor: "#4169e1",
-        borderColor: "transparent",
-      },
-    }),
+    paddingTop: 16,
+    paddingBottom: 16,
+    backgroundColor: "#FF6C00",
+    borderRadius: 100,
   },
-  btnTitle: {
-    color: Platform.OS === "ios" ? "#4169e1" : "#f0f8ff",
+  formBtnText: {
     fontFamily: "Montserrat-Regular",
     fontSize: 16,
+    lineHeight: 19,
+    color: "#FFFFFF",
   },
-  header: {
-    marginBottom: 33,
-  },
-  headerTitle: {
-    fontFamily: "Montserrat-Regular",
-    // fontFamily: "Montserrat-Bold",
-    textAlign: "center",
-    fontSize: 32,
-    color: "#ccc",
-  },
-  loginView: {
+  authFooter: {
+    justifyContent: "center",
+    alignItems: "center",
     flexDirection: "row",
-    justifyContent: "center",
   },
-  loginText: {
-    color: "#fff",
-    textAlign: "center",
-  },
-  btnTrans: {
-    marginTop: 20,
-    marginHorizontal: 20,
-    justifyContent: "center",
-    alignItems: "center",
-    height: 40,
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: "#4169e1",
-  },
-  btnTransTitle: {
-    fontSize: 16,
+  switchText: {
     fontFamily: "Montserrat-Regular",
-    color: "#f0f8ff",
+    fontSize: 16,
+    lineHeight: 19,
+  },
+  switchLink: {
+    fontFamily: "Montserrat-Regular",
+    fontSize: 16,
+    lineHeight: 19,
+    color: "#1B4371",
+    textDecorationLine: "underline",
   },
 });

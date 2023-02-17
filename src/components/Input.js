@@ -44,6 +44,8 @@ const Input = ({ password, onFocus = () => {}, ...props }) => {
 
 const styles = StyleSheet.create({
   input: {
+    fontFamily: "Montserrat-Regular",
+    fontSize: 16,
     borderWidth: 1,
     borderRadius: 8,
     width: "100%",

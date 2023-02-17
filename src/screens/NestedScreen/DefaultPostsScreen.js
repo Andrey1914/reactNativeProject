@@ -13,7 +13,7 @@ import {
   onSnapshot,
   updateDoc,
   doc,
-  // addDoc,
+  addDoc,
 } from "firebase/firestore";
 import { db } from "../../firebase/config";
 

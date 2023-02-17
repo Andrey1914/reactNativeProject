@@ -1,3 +1,3 @@
 # reactNativeProject
 
-https://expo.fyi/project-page 
+https://expo.dev/@andrey1914/reeactNativeProject?serviceType=classic&distribution=expo-go

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Camera, CameraType } from "expo-camera";
-// import * as MediaLibrary from "expo-media-library";
+import * as MediaLibrary from "expo-media-library";
 import * as Location from "expo-location";
 import { Octicons, MaterialIcons, Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
@@ -28,11 +28,15 @@ const initialPostData = {
 
 export default function CreatePostsScreen({ navigation }) {
   const [postData, setPostData] = useState(initialPostData);
+  const [hasCameraPermission, setHasCameraPermission] = useState();
+  const [hasLocationPermission, setHasLocationPermission] = useState(null);
+  const [hasMediaLibraryPermission, setHasMediaLibraryPermission] = useState();
   const [camera, setCamera] = useState(null);
   const [city, setCity] = useState("");
   const [location, setLocation] = useState(null);
   const [type, setType] = useState(CameraType.back);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
+  // const [permission, requestPermission] = Camera.useCameraPermissions();
 
   const { userId, name, email, avatar } = useSelector((state) => state.auth);
 
@@ -64,12 +68,48 @@ export default function CreatePostsScreen({ navigation }) {
   //   запрос на встановлення локації
   useEffect(() => {
     (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        console.log("Permission to access location was denied");
-      }
+      const locationPermition =
+        await Location.requestForegroundPermissionsAsync();
+      const cameraPermition = await Camera.getCameraPermissionsAsync();
+      const mediaLibraryPermission =
+        await MediaLibrary.requestPermissionsAsync();
+      setHasLocationPermission(locationPermition.status === "granted");
+      setHasCameraPermission(cameraPermition.status === "granted");
+      setHasMediaLibraryPermission(mediaLibraryPermission.status === "granted");
+      if (!hasMediaLibraryPermission) return;
+      // if (status !== "granted") {
+      //   console.log("Permission to access location was denied");
+      // }
     })();
   }, []);
+
+  if (
+    hasCameraPermission === undefined ||
+    hasLocationPermission === undefined
+  ) {
+    return <Text>Requesting permissions...</Text>;
+  } else if (!hasLocationPermission) {
+    return (
+      <Text>
+        Permission for location not granted. Please change this in settings.
+      </Text>
+    );
+  } else if (!hasCameraPermission) {
+    return (
+      <Text>
+        Permission for camera not granted. Please change this in settings.
+      </Text>
+    );
+  }
+
+  // useEffect(() => {
+  //   (async () => {
+  //     const { status } = await Camera.requestCameraPermissionsAsync();
+  //     await MediaLibrary.requestPermissionsAsync();
+
+  //     setHasPermission(status === "granted");
+  //   })();
+  // }, []);
 
   //   загрузка фото з галереї телефона
   const pickImage = async () => {
@@ -91,19 +131,19 @@ export default function CreatePostsScreen({ navigation }) {
       console.log("error", error);
       return;
     }
-    try {
-      const { status } = await Camera.getCameraPermissionsAsync();
-      if (status !== "granted") {
-        console.log("Permission to access camera was denied");
-        return;
-      }
+    // try {
+    //   const { status } = await Camera.getCameraPermissionsAsync();
+    //   if (status !== "granted") {
+    //     console.log("Permission to access camera was denied");
+    //     return;
+    //   }
 
-      const photo = await camera.takePictureAsync();
-      // await MediaLibrary.createAssetAsync(photo.uri);
-      setImageToPostData(photo.uri);
-    } catch (error) {
-      console.log("error.message", error.message);
-    }
+    const photo = await camera.takePictureAsync();
+    await MediaLibrary.createAssetAsync(photo.uri);
+    setImageToPostData(photo.uri);
+    // } catch (error) {
+    //   console.log("error.message", error.message);
+    // }
   };
 
   //    обчислюємо координати, записуємо або фото з галереї або фото з камери в state
@@ -174,7 +214,8 @@ export default function CreatePostsScreen({ navigation }) {
   const uploadPostToServer = async () => {
     const photo = await uploadPhotoToServer();
     try {
-      const setUserPost = await addDoc(collection(db, "posts"), {
+      // const setUserPost = await addDoc(collection(db, "posts"), {
+      await addDoc(collection(db, "posts"), {
         photo,
         description: postData.description,
         place: postData.place,

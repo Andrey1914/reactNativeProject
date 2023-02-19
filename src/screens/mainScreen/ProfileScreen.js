@@ -36,6 +36,7 @@ export default function ProfileScreen({ navigation }) {
   const signOut = () => {
     dispatch(authSignOutUser());
   };
+
   //   відмальовує всі пости на сторінці
   useEffect(() => {
     getUserPost();
@@ -49,6 +50,7 @@ export default function ProfileScreen({ navigation }) {
       setPosts(docSnap.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
     );
   };
+
   //   видалення поста з профілю
   const deletePost = async (postId) => {
     await deleteDoc(doc(db, "posts", postId));

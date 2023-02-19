@@ -8,13 +8,7 @@ import {
   FlatList,
 } from "react-native";
 import { Octicons, FontAwesome, AntDesign } from "@expo/vector-icons";
-import {
-  collection,
-  onSnapshot,
-  updateDoc,
-  doc,
-  addDoc,
-} from "firebase/firestore";
+import { collection, onSnapshot, updateDoc, doc } from "firebase/firestore";
 import { db } from "../../firebase/config";
 
 export default function DefaultPostsScreen({ navigation }) {

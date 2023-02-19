@@ -9,7 +9,6 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   SafeAreaView,
-  ImageBackground,
   FlatList,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
@@ -56,12 +55,14 @@ export default function CommentsScreen({ route }) {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
   };
+
   //   створення коментарів
   const createComment = () => {
     sendCommentToServer();
     setComment("");
     keyboardHide();
   };
+
   //   завантаження коментарів на firebase
   const sendCommentToServer = async () => {
     const date = new Date().toLocaleDateString();
@@ -83,6 +84,7 @@ export default function CommentsScreen({ route }) {
       console.log("error.message", error.message);
     }
   };
+
   //   выдображення коментарів на сторінці
   const getAllComments = async () => {
     try {

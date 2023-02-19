@@ -36,7 +36,6 @@ export default function CreatePostsScreen({ navigation }) {
   const [location, setLocation] = useState(null);
   const [type, setType] = useState(CameraType.back);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
-  // const [permission, requestPermission] = Camera.useCameraPermissions();
 
   const { userId, name, email, avatar } = useSelector((state) => state.auth);
 
@@ -77,9 +76,6 @@ export default function CreatePostsScreen({ navigation }) {
       setHasCameraPermission(cameraPermition.status === "granted");
       setHasMediaLibraryPermission(mediaLibraryPermission.status === "granted");
       if (!hasMediaLibraryPermission) return;
-      // if (status !== "granted") {
-      //   console.log("Permission to access location was denied");
-      // }
     })();
   }, []);
 
@@ -102,15 +98,6 @@ export default function CreatePostsScreen({ navigation }) {
     );
   }
 
-  // useEffect(() => {
-  //   (async () => {
-  //     const { status } = await Camera.requestCameraPermissionsAsync();
-  //     await MediaLibrary.requestPermissionsAsync();
-
-  //     setHasPermission(status === "granted");
-  //   })();
-  // }, []);
-
   //   загрузка фото з галереї телефона
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -121,7 +108,6 @@ export default function CreatePostsScreen({ navigation }) {
     });
     if (!result.canceled) {
       setImageToPostData(result.assets[0].uri);
-      // setImageToPostData(result.assets);
     }
   };
 
@@ -131,19 +117,10 @@ export default function CreatePostsScreen({ navigation }) {
       console.log("error", error);
       return;
     }
-    // try {
-    //   const { status } = await Camera.getCameraPermissionsAsync();
-    //   if (status !== "granted") {
-    //     console.log("Permission to access camera was denied");
-    //     return;
-    //   }
 
     const photo = await camera.takePictureAsync();
     await MediaLibrary.createAssetAsync(photo.uri);
     setImageToPostData(photo.uri);
-    // } catch (error) {
-    //   console.log("error.message", error.message);
-    // }
   };
 
   //    обчислюємо координати, записуємо або фото з галереї або фото з камери в state
@@ -214,7 +191,6 @@ export default function CreatePostsScreen({ navigation }) {
   const uploadPostToServer = async () => {
     const photo = await uploadPhotoToServer();
     try {
-      // const setUserPost = await addDoc(collection(db, "posts"), {
       await addDoc(collection(db, "posts"), {
         photo,
         description: postData.description,

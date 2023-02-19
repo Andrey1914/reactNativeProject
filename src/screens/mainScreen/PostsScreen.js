@@ -64,7 +64,7 @@ export default function PostsScreen() {
         name="Map"
         component={MapScreen}
         options={({ navigation }) => ({
-          title: "Location",
+          title: "Location.",
           headerLeft: () => (
             <TouchableOpacity onPress={() => navigation.goBack()}>
               <AntDesign

@@ -42,7 +42,6 @@ export const authSignInUser =
   async () => {
     try {
       const user = await signInWithEmailAndPassword(auth, email, password);
-      //   console.log("userLogin", user);
       Alert.alert(`Welcome to cabinet`);
     } catch (error) {
       Alert.alert(error.message);

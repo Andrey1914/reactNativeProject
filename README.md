@@ -7,15 +7,15 @@
 </div>
 
 <div align="center">
-  <img src="https://user-images.githubusercontent.com/94795745/219967182-6751c39a-fc5c-4922-aaeb-234f5f44e561.png" width="400" height="400"/>
+  <img src="https://user-images.githubusercontent.com/94795745/220615793-1450e76a-d64d-477d-b2ed-699dc149d4f4.png" width="400" height="400"/>
 </div>
 
 
 
-<!--![qr-code](https://user-images.githubusercontent.com/94795745/219967182-6751c39a-fc5c-4922-aaeb-234f5f44e561.png)-->
+
+<!--![qr-code](https://user-images.githubusercontent.com/94795745/220615793-1450e76a-d64d-477d-b2ed-699dc149d4f4.png)-->
 
 
-<!--https://expo.dev/@andrey1914/reeactNativeProject?serviceType=classic&distribution=expo-go
-https://expo.dev/@andrey1914/reactNativeProject?serviceType=classic&distribution=expo-go
+<!--https://expo.dev/@andrey1914/reactNativeProject?serviceType=classic&distribution=expo-go
 https://exp.host/@andrey1914/reactNativeProject/index.exp?sdkVersion=47.0.0-->
  

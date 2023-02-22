@@ -80,10 +80,10 @@ export default function RegistrationScreen({ navigation }) {
   //відправка форми регистрації на farebase
   const submitForm = async () => {
     try {
-      const avatarRef = await uploadAvatarToServer();
-      setState((prevState) => ({ ...prevState, avatar: avatarRef }));
+      const photoURL = await uploadAvatarToServer();
+      setState((prevState) => ({ ...prevState, avatar: photoURL }));
       const newState = {
-        avatar: avatarRef,
+        avatar: photoURL,
         name: state.name,
         email: state.email,
         password: state.password,
@@ -91,9 +91,10 @@ export default function RegistrationScreen({ navigation }) {
       dispatch(authSignUpUser(newState));
       keyboardHide();
     } catch (error) {
-      Alert.alert("Choose your avatar");
+      Alert.alert("Something went wrong :(");
     }
   };
+
   //відправка avatar на farebase
   const uploadAvatarToServer = async () => {
     const storage = getStorage();
